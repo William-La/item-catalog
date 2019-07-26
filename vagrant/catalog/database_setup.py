@@ -14,12 +14,29 @@ class Category(Base):
     id = Column(Integer, primary_key = True)
     name = Column(String)
 
+    @property
+    def serialize(self):
+        return{
+            'id' = self.id,
+            'name' = self.name
+        }
+
+
 class Item(Base):
     __tablename__ = 'item'
     id = Column(Integer, primary_key = True)
     cat_id = Column(Integer, ForeignKey('category.id'))
     title = Column(String)
-    description = Column(String)
+    desc = Column(String)
+    
+    @property
+    def serialize(self):
+        return{
+            'id' = self.id,
+            'cat_id' = self.cat_id,
+            'title' = self.title,
+            'desc' = self.desc
+        }
 
 class User(Base):
     __tablename__ = 'user'
