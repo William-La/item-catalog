@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Restaurant, MenuItem
+from database_setup import Base, Category, Item
 from flask import jsonify, session as login_session
 from flask_httpauth import HTTPBasicAuth
 
@@ -62,7 +62,7 @@ def editItem(itemTitle):
 @app.route("/catalog/<String: itemTitle>/delete", methods=['GET', 'POST'])
 def deleteItem(itemTitle):
     item = session.query(Item).filter_by(title=itemTitle).first()
-    category = item.category
+    category = item.category.name
     if request.method == 'POST':
         session.delete(item)
         session.commit()

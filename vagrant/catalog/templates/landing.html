@@ -7,11 +7,11 @@
         {% if recentItems != [] %}
         <div class="items">
             {% for i in recentItems %}
-            <a href="{{url_for('showItem()', category = i.category, itemTitle = i.title">
+            <a href="{{url_for('showItem()', category = i.category.name, itemTitle = i.title">
                 {{i.title}}
             </a>
             <p>
-                ({{i.category}})
+                ({{i.category.name}})
             </p>
         </div>
         {% endif %}
