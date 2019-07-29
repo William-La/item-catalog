@@ -10,3 +10,32 @@ body {
     text-align: center;
     font-weight: bold;
 }
+
+.navigation {
+    position: fixed;
+    height: 100%;
+    width: 200px;
+    top: 0;
+    z-index: 1;
+    left: 0;
+    padding-top: 25px;
+    overflow-x: hidden;
+    background-color: #F6E1DF
+}
+
+.navigation a{
+    font-size: 20px;
+    color: #1B5A75;
+    display: block;
+    text-decoration: none;
+    padding: 6px 8px 6px 14px;
+}
+
+.navigation a:hover{
+    color: #F45B69;
+}
+
+.main{
+    margin-left: 200px;
+    padding: 0px 10px
+}
