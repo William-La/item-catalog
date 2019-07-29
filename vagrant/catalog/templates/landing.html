@@ -1,0 +1,26 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+{% include "sidebar.html" %}
+<html>
+    <div>
+        {% if recentItems != [] %}
+        <div class="items">
+            {% for i in recentItems %}
+            <a href="{{url_for('showItem()', category = i.category, itemTitle = i.title">
+                {{i.title}}
+            </a>
+            <p>
+                ({{i.category}})
+            </p>
+        </div>
+        {% endif %}
+        {% endfor %}
+
+        {% else %}
+        <div>
+            <p>There are no recent items.</p>
+        </div>
+    </div>
+    
+</html>
