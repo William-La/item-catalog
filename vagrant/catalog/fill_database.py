@@ -100,7 +100,56 @@ session.add(comedy2)
 session.commit()
 
 
-#category6 = Category(name="Fantasy")
-#category7 = Category(name="Romance")
-#category8 = Category(name="Thriller")
-#category9 = Category(name="Science Fiction")
+category6 = Category(name="Fantasy")
+
+session.add(category6)
+session.commit()
+
+
+fantasy1 = Item(category=category6, title="Abu", desc="A monkey and his pet human theif, Alan, rub a golden teapot and become part of the royal family.")
+
+session.add(fantasy1)
+session.commit()
+
+
+fantasy2 = Item(category=category6, title="Beast and the Beauty", desc="A Walter Dis movie about a prince who is turned into a horrendous creature because he was rude to an old lady. Is later saved by Bella.")
+
+session.add(fantasy2)
+session.commit()
+
+
+category7 = Category(name="Romance")
+
+session.add(category7)
+session.commit()
+
+
+rom1 = Item(category=category7, title="To All The Individuals Whom Never Liked Me Back", desc="I've heard a lot about this movie but I fell asleep while watching it so I have no idea what to write for this description.")
+
+session.add(rom1)
+session.commit()
+
+
+rom2 = Item(category=category7, title="Crazy Rich Asian-Americans", desc="Honestly what I wish my life was like but here I am sitting at a desk staring at a monitor typing out a random description.")
+
+session.add(rom2)
+session.commit()
+
+
+category8 = Category(name="Science Fiction")
+
+session.add(category8)
+session.commit()
+
+
+sci1 = Item(category=category8, title="Lieutenant America: The First Revenger", desc="Small nerdy kid turns really buff and fights off Nazis. Saves America by crashing a plane into the ocean but misses date with lover which was sad.")
+
+session.add(sci1)
+session.commit()
+
+
+sci2 = Item(category=category8, title="The Mars-Human", desc="Astronaut is left on Mars, does some impressive stuff to save his life, and grows potatoes using human fertilizer.")
+
+session.add(sci2)
+session.commit()
+
