@@ -19,18 +19,18 @@ app = Flask(__name__)
 
 @app.route("/")
 def landingPage():
-    recentItems = session.query(Item).order_by(Item.id)[0:9]
+    recentItems = session.query(Item).order_by(Item.id.desc())[0:9]
     return render_template('landing.html', recentItems=recentItems)
 
 
-@app.route("/catalog/<String: category>/items")
+@app.route("/catalog/<category>/items")
 def showCategory(category):
     cat_id = session.query(Category).filter_by(name=category).first().id
     items = sesison.query(Item).filter_by(cat_id=cat_id).all
     return render_template("category.html", items=items)
 
 
-@app.route("/catalog/(String: category>/<String: itemTitle>")
+@app.route("/catalog/<category>/<itemTitle>")
 def showItem(category, itemTitle):
     cat_id = session.query(Category).filter_by(name=category).first().id
     item = session.query(Item).filter_by(
@@ -38,7 +38,7 @@ def showItem(category, itemTitle):
     return render_template("item.html", item=item)
 
 
-@app.route("/catalog/<String: itemTitle>/edit", methods=['GET', 'POST'])
+@app.route("/catalog/<itemTitle>/edit", methods=['GET', 'POST'])
 def editItem(itemTitle):
     item = session.query(Item).filter_by(title=itemTitle).first()
     if request.method == 'POST':
@@ -59,7 +59,7 @@ def editItem(itemTitle):
         return render_template("edit.html", item=item)
 
 
-@app.route("/catalog/<String: itemTitle>/delete", methods=['GET', 'POST'])
+@app.route("/catalog/<itemTitle>/delete", methods=['GET', 'POST'])
 def deleteItem(itemTitle):
     item = session.query(Item).filter_by(title=itemTitle).first()
     category = item.category.name
