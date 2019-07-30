@@ -6,6 +6,7 @@ engine = create_engine('sqlite:///itemCatalog.db')
 
 Base.metadata.bind = engine
 
+DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
