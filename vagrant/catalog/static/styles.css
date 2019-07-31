@@ -1,6 +1,6 @@
 body {
     background-color: #F8E8E3;
-    font-family: Helvetica, sans-serif;
+    font-family: Nunito, sans-serif;
 }
 
 
@@ -41,15 +41,16 @@ body {
 }
 
 .items {
-    color: rgb(8, 50, 68);
-    font-size: 20em;
+    color: rgb(97, 97, 97);
+    font-size: 20px;
     font-weight: normal;
 }
 
 .items a{
+    font-size: 30px;
     color: #F45B69;
-    font-size: 25em;
-    font-weight: normal;
+    font-weight: bold;
+    text-decoration: none;
 }
 
 .content {
