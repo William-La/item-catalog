@@ -76,7 +76,7 @@ session.add(bio1)
 session.commit()
 
 
-bio2 = Item(category=category4, title="The All-Inclusive Hypothesis", desc="The emergence of world renowned scientist Stevie Eagling, best known for his hypothesis regardign the middle of the universe. ")
+bio2 = Item(category=category4, title="The All-Inclusive Hypothesis", desc="The emergence of world renowned scientist Stevie Eagling, best known for his hypothesis regarding the middle of the universe. ")
 
 session.add(bio2)
 session.commit()
