@@ -21,8 +21,12 @@ h1 {
     background-color: #694D75;
     padding: 5px 75px 5px 150px;
     text-align: left;
-    font-weight: bolder;
+}
+
+.header a{
     color: #ffffff;
+    text-decoration: none;
+    font-weight: bolder;
     font-size: 45px;
 }
 
@@ -73,7 +77,7 @@ h1 {
 }
 
 .content {
-    margin: 5px 75px 0px 150px;
+    margin: 15px 75px 0px 150px;
     padding: 5px 0 25px 25px;
     background-color: rgb(247, 241, 240);
     outline-style: solid;
