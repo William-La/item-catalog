@@ -11,18 +11,22 @@ auth = HTTPBasicAuth()
 engine = create_engine('sqlite:///itemCatalog.db',
                        connect_args={'check_same_thread': False})
 
+# create database session
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 app = Flask(__name__)
 
 
+# route declarations and functionality
+# route for landing page and recent items
 @app.route("/")
 def landingPage():
     recentItems = session.query(Item).order_by(Item.id.desc())[0:9]
     return render_template('landing.html', recentItems=recentItems)
 
 
+# route for showing the items in a category
 @app.route("/catalog/<category>/items")
 def showCategory(category):
     cat_id = session.query(Category).filter_by(name=category).first().id
@@ -30,6 +34,7 @@ def showCategory(category):
     return render_template("category.html", items=items)
 
 
+# route for showing an item and its description
 @app.route("/catalog/<category>/<itemTitle>")
 def showItem(category, itemTitle):
     cat_id = session.query(Category).filter_by(name=category).first().id
@@ -38,6 +43,7 @@ def showItem(category, itemTitle):
     return render_template("item.html", item=item)
 
 
+# route for editing an item (requires login)
 @app.route("/catalog/<itemTitle>/edit", methods=['GET', 'POST'])
 def editItem(itemTitle):
     item = session.query(Item).filter_by(title=itemTitle).first()
@@ -59,6 +65,7 @@ def editItem(itemTitle):
         return render_template("edit.html", item=item)
 
 
+# route for deleting an item (requires login)
 @app.route("/catalog/<itemTitle>/delete", methods=['GET', 'POST'])
 def deleteItem(itemTitle):
     item = session.query(Item).filter_by(title=itemTitle).first()

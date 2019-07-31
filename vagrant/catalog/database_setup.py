@@ -9,15 +9,20 @@ from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer,
                           BadSignature, SignatureExpired)
 
 Base = declarative_base()
+
+# generate random key for hashing
 sKey = "".join(random.choice(string.ascii_uppercase +
                              string.digits) for x in xrange(32))
 
 
+# category table
 class Category(Base):
     __tablename__ = 'category'
     id = Column(Integer, primary_key=True)
     name = Column(String)
     items = relationship("Item")
+
+    # jsonify function
     @property
     def serialize(self):
         return{
@@ -26,6 +31,7 @@ class Category(Base):
         }
 
 
+# item table
 class Item(Base):
     __tablename__ = 'item'
     id = Column(Integer, primary_key=True)
@@ -34,6 +40,7 @@ class Item(Base):
     title = Column(String)
     desc = Column(String)
 
+    # jsonify function
     @property
     def serialize(self):
         return{
@@ -44,6 +51,7 @@ class Item(Base):
         }
 
 
+# user table
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
@@ -62,6 +70,7 @@ class User(Base):
         s = Serializer(sKey, expires_in=expiration)
         return s.dumps({'id': self.id})
 
+    # token verification function
     @staticmethod
     def verify_auth_token(token):
         s = Serializer(sKey)
