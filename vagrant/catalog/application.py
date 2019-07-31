@@ -27,11 +27,12 @@ def landingPage():
 
 
 # route for showing the items in a category
+@app.route("/catalog/<category>")
 @app.route("/catalog/<category>/items")
 def showCategory(category):
     cat_id = session.query(Category).filter_by(name=category).first().id
-    items = sesison.query(Item).filter_by(cat_id=cat_id).all
-    return render_template("category.html", items=items)
+    items = session.query(Item).filter_by(cat_id=cat_id).all()
+    return render_template("category.html", items=items, category=category)
 
 
 # route for showing an item and its description

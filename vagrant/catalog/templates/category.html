@@ -3,4 +3,14 @@
 <!--{% include "header.html" %}
 {% include "sidebar.html" %}-->
 
+<div>
+    <h1>{{ category }}</h1>
+    <div class="items">
+        {% for i in items %}
+        <a href="{{url_for('showItem', category = i.category.name, itemTitle = i.title)}}">{{i.title}}</a>
+        <br>
+        {% endfor %}
+    </div>
+</div>
+
 {% endblock %}
