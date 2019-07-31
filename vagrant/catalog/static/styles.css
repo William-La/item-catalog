@@ -1,8 +1,15 @@
 body {
     background-color: #F8E8E3;
     font-family: Nunito, sans-serif;
+    font-size: 20px;
+    color: black;
+    padding: 25px 25px 25px 25px;
 }
 
+h1 {
+    color: rgb(5, 64, 90);
+    font-weight: bolder;
+}
 
 .header {
     background-color: #694D75;
@@ -53,6 +60,14 @@ body {
     text-decoration: none;
 }
 
+.items a:hover {
+    color: #1B5A75;
+}
+
 .content {
-    padding: 25px 0 0 25px;
+    padding: 5px 0 25px 25px;
+    background-color: rgb(247, 241, 240);
+    outline-style: solid;
+    outline-color: #3d3d3d;
+    outline-width: thin;
 }
