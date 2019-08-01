@@ -44,6 +44,28 @@ def showItem(category, itemTitle):
     return render_template("item.html", item=item)
 
 
+# route for creating a new item (requires login)
+@app.route("/catalog/new", methods=['GET', 'POST'])
+def newItem():
+    if request.method == 'POST':
+        title = ""
+        desc = ""
+        if request.form['title']:
+            title = request.form['title']
+        if request.form['desc']:
+            desc = request.form['desc']
+        if request.form['category']:
+            name = request.form['category']
+            category = session.query(Category).filter_by(name=name).first()
+        newItem = Item(category=category, title=title, desc=desc)
+        session.add(newItem)
+        session.commit()
+        flash('Item Successfully Added')
+        return redirect(url_for('landingPage'))
+    else:
+        return render_template("new.html")
+
+
 # route for editing an item (requires login)
 @app.route("/catalog/<itemTitle>/edit", methods=['GET', 'POST'])
 def editItem(itemTitle):
@@ -54,9 +76,9 @@ def editItem(itemTitle):
         if request.form['desc']:
             item.desc = request.form['desc']
         if request.form['category']:
-            new_cat_id = session.query(Category).filter_by(
-                         name=request.form['category']).first().id
-            item.cat_id = new_cat_id
+            #new_cat_id = session.query(Category).filter_by(
+            #             name=request.form['category']).first().id
+            #item.cat_id = new_cat_id
             item.category = request.form['category']
         session.add(item)
         session.commit()
