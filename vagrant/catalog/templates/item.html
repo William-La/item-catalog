@@ -5,4 +5,5 @@
         <h1>{{ item.title }}</h1>
     </div>
     <p>Description: {{ item.desc }}</p>
+    <a href="{{url_for('editItem', itemTitle= item.title)}}">edit</a> | <a href="{{url_for('deleteItem', itemTitle= item.title)}}">delete</a>
 {% endblock %}

@@ -76,14 +76,14 @@ def editItem(itemTitle):
         if request.form['desc']:
             item.desc = request.form['desc']
         if request.form['category']:
-            #new_cat_id = session.query(Category).filter_by(
-            #             name=request.form['category']).first().id
-            #item.cat_id = new_cat_id
-            item.category = request.form['category']
+            new_cat = session.query(Category).filter_by(
+                         name=request.form['category']).first()
+            print(new_cat)
+            item.category = new_cat
         session.add(item)
         session.commit()
-        flash('Item Successfully Edited')
-        return redirect(url_for('showCategory', category=item.category))
+        #flash('Item Successfully Edited')
+        return redirect(url_for('showCategory', category=item.category.name))
     else:
         return render_template("edit.html", item=item)
 
@@ -96,7 +96,7 @@ def deleteItem(itemTitle):
     if request.method == 'POST':
         session.delete(item)
         session.commit()
-        flash('Item Successfully Deleted')
+        #flash('Item Successfully Deleted')
         return redirect(url_for('showCategory', category=category))
     else:
         return render_template("delete.html", item=item)

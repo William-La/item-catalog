@@ -1,5 +1,34 @@
 {% extends "main.html" %}
 {% include "header.html" %}
 {% block content %}
+<div class="form">
+    <form action="#", method="POST">
+        Title:
+        <br>
+        <input type="text" name="title" value="{{item.title}}">
+        <br>
+        Description:
+        <br>
+        <textarea name="desc" rows="10" cols="30">
+            {{item.desc}}
+        </textarea>
+        <br>
 
+        <!--Change following selection if rebranding-->
+        Genre:
+        <br>
+        <select name="category" value="{{item.category.name}}">
+            <option value="Action">Action</option>
+            <option value="Adventure">Adventure</option>
+            <option value="Animated">Animated</option>
+            <option value="Biography">Biography</option>
+            <option value="Comedy">Comedy</option>
+            <option value="Fantasy">Fantasy</option>
+            <option value="Romance">Romance</option>
+            <option value="Science Fiction">Science Fiction</option>
+        </select>
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+</div>
 {% endblock %}
