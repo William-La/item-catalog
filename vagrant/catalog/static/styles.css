@@ -17,6 +17,14 @@ h1 {
     font-size: 35px
 }
 
+#header1{
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#header2{
+}
+
 .header {
     background-color: #694D75;
     padding: 5px 75px 5px 150px;
@@ -31,23 +39,17 @@ h1 {
 }
 
 .navigation {
-    position: fixed;
-    height: 100%;
-    width: 200px;
-    top: 0;
-    z-index: 1;
-    left: 0;
-    padding-top: 25px;
+    border-bottom-width: 0;
+    margin-right: 20px;
+    display: inline-block;
     overflow-x: hidden;
-    background-color: #F6E1DF
 }
 
 .navigation a{
-    font-size: 20px;
-    color: #1B5A75;
+    font-size: 25px;
     display: block;
+    color: #1B5A75;
     text-decoration: none;
-    padding: 6px 8px 6px 14px;
 }
 
 .navigation a:hover{
@@ -55,11 +57,14 @@ h1 {
 }
 
 .main{
-    margin-left: 200px;
-    padding: 0px 10px
+    border-left: thin solid #dddddd;
+    padding: 0 20px;
+    margin: 20px 20px 20px 0px;
+    display: inline-block;
 }
 
 .items {
+    margin-top: 20px;
     color: rgb(97, 97, 97);
     font-size: 20px;
     font-weight: normal;
@@ -78,7 +83,7 @@ h1 {
 
 .content {
     margin: 15px 75px 0px 150px;
-    padding: 5px 0 25px 25px;
+    padding: 5px 25px 25px 25px;
     background-color: rgb(247, 241, 240);
     outline-style: solid;
     outline-color: #3d3d3d;
