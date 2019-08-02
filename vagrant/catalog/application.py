@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from flask import Flask, render_template, request, redirect, url_for, flash
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
@@ -60,7 +61,7 @@ def newItem():
         newItem = Item(category=category, title=title, desc=desc)
         session.add(newItem)
         session.commit()
-        flash('Item Successfully Added')
+        #flash('Item Successfully Added')
         return redirect(url_for('landingPage'))
     else:
         return render_template("new.html")
@@ -78,7 +79,6 @@ def editItem(itemTitle):
         if request.form['category']:
             new_cat = session.query(Category).filter_by(
                          name=request.form['category']).first()
-            print(new_cat)
             item.category = new_cat
         session.add(item)
         session.commit()

@@ -59,12 +59,12 @@ h1 {
 .main{
     border-left: thin solid #dddddd;
     padding: 0 20px;
+    top: 0;
     margin: 20px 20px 20px 0px;
     display: inline-block;
 }
 
 .items {
-    margin-top: 20px;
     color: rgb(97, 97, 97);
     font-size: 20px;
     font-weight: normal;
@@ -88,4 +88,13 @@ h1 {
     outline-style: solid;
     outline-color: #3d3d3d;
     outline-width: thin;
+}
+#itemButton {
+    color: #F45B69;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+#itemButton:hover {
+    color: #1B5A75;
 }
