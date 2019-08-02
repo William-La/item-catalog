@@ -23,7 +23,7 @@ app = Flask(__name__)
 # route for landing page and recent items
 @app.route("/")
 def landingPage():
-    recentItems = session.query(Item).order_by(Item.id.desc())[0:9]
+    recentItems = session.query(Item).order_by(Item.id.desc())[0:8]
     return render_template('landing.html', recentItems=recentItems)
 
 

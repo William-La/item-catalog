@@ -1,7 +1,8 @@
 {% extends "main.html" %}
 {% include "header.html" %}
 {% block content %}
-<div class="form">
+<div>
+    <h1>Edit Movie</h1>
     <form action="#", method="POST">
         Title:
         <br>
@@ -9,9 +10,7 @@
         <br>
         Description:
         <br>
-        <textarea name="desc" rows="10" cols="30">
-            {{item.desc}}
-        </textarea>
+        <textarea name="desc" rows="10" cols="30">{{ item.desc }}</textarea>
         <br>
 
         <!--Change following selection if rebranding-->
@@ -27,6 +26,7 @@
             <option value="Romance">Romance</option>
             <option value="Science Fiction">Science Fiction</option>
         </select>
+        <br>
         <br>
         <input type="submit" value="Submit">
     </form>

@@ -52,7 +52,7 @@ session.add(category3)
 session.commit()
 
 
-animate1 = Item(category=category3, title="Kid from Brooklyn: Introduction to many Araneae", desc="Honestly the best animated movie to this date 10/10 highly recommend also the soundtrack is amazing it's on Netflix what are you waiting for.")
+animate1 = Item(category=category3, title="Kid from Brooklyn: Introduction to many Araneae", desc="Honestly the best animated movie to this date 10/10 highly recommend also the soundtrack is amazing it's on Netflix what are you waiting for?")
 
 session.add(animate1)
 session.commit()
@@ -146,10 +146,3 @@ sci1 = Item(category=category8, title="Lieutenant America: The First Revenger", 
 
 session.add(sci1)
 session.commit()
-
-
-sci2 = Item(category=category8, title="The Mars-Human", desc="Astronaut is left on Mars, does some impressive stuff to save his life, and grows potatoes using human fertilizer.")
-
-session.add(sci2)
-session.commit()
-
