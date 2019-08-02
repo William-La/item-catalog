@@ -1,10 +1,10 @@
 {% extends "main.html" %}
 {% include "header.html" %}
 {% block content %}
-<!--{% include "sidebar.html" %}-->
+{% include "sidebar.html" %}
 
-<div>
-    <h1>{{ category }}</h1>
+<div class="main">
+    <h1 id="diffHeader">{{ category }}</h1>
     <div class="items">
         {% for i in items %}
         <a href="{{url_for('showItem', category = i.category.name, itemTitle = i.title)}}">{{i.title}}</a>

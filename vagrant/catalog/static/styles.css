@@ -14,15 +14,12 @@ body {
 h1 {
     color: rgb(5, 64, 90);
     font-weight: bold;
-    font-size: 35px
+    font-size: 35px;
 }
 
-#header1{
+#diffHeader{
     margin-top: 0;
     margin-bottom: 0;
-}
-
-#header2{
 }
 
 .header {
@@ -39,8 +36,9 @@ h1 {
 }
 
 .navigation {
-    border-bottom-width: 0;
-    margin-right: 20px;
+    margin-top: 20px;
+    border-right: thin solid #dddddd;
+    padding: 0px 20px 0 0;
     display: inline-block;
     overflow-x: hidden;
 }
@@ -57,10 +55,8 @@ h1 {
 }
 
 .main{
-    border-left: thin solid #dddddd;
-    padding: 0 20px;
-    top: 0;
-    margin: 20px 20px 20px 0px;
+    vertical-align: top;
+    padding: 20px 20px; 
     display: inline-block;
 }
 
