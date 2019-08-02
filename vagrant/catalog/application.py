@@ -97,7 +97,7 @@ def deleteItem(itemTitle):
         session.delete(item)
         session.commit()
         #flash('Item Successfully Deleted')
-        return redirect(url_for('showCategory', category=category))
+        return redirect(url_for('landingPage'))
     else:
         return render_template("delete.html", item=item)
 
