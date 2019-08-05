@@ -37,6 +37,7 @@ h1 {
 
 .right-header {
     float: right;
+    margin-top: 13px;
 }
 
 .navigation {
