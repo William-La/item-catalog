@@ -22,7 +22,7 @@ app = Flask(__name__)
 
 # *** Login and User Auth Functions ***
 try:
-    JSON_DATA = json.load(open('client_secrets.json', 'r').read())['web']
+    JSON_DATA = json.loads(open('client_secrets.json', 'r').read())['web']
     CLIENT_ID = JSON_DATA['client_id']
     CLIENT_SECRET = JSON_DATA['client_secret']
 except:
@@ -34,6 +34,7 @@ def login():
     state = "".join(random.choice(string.ascii_uppercase+string.digits)
                     for i in xrange(32))
     login_session['state'] = state
+
 
 # *** Route declarations and functionality ***
 # route for landing page and recent items

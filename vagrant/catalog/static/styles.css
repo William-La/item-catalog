@@ -35,6 +35,10 @@ h1 {
     font-size: 45px;
 }
 
+.right-header {
+    float: right;
+}
+
 .navigation {
     margin-top: 20px;
     border-right: thin solid #dddddd;
