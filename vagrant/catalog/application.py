@@ -119,6 +119,13 @@ def deleteItem(itemTitle):
         return render_template("delete.html", item=item)
 
 
+# JSON function
+@app.route("/catalog.json")
+def catalogJSON():
+    categories = session.query(Category).all()
+    return jsonify(Category=[c.serialize for c in categories])
+
+
 if __name__ == '__main__':
     app.debug = True
     app.run(host='0.0.0.0', port=8000)
