@@ -3,8 +3,10 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, Item
-from flask import jsonify, session as login_session
+from flask import jsonify, make_response, session as login_session
 from flask_httpauth import HTTPBasicAuth
+from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
+import random, string, json, httplib2, requests
 
 auth = HTTPBasicAuth()
 
@@ -18,8 +20,22 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 app = Flask(__name__)
 
+# *** Login and User Auth Functions ***
+try:
+    JSON_DATA = json.load(open('client_secrets.json', 'r').read())['web']
+    CLIENT_ID = JSON_DATA['client_id']
+    CLIENT_SECRET = JSON_DATA['client_secret']
+except:
+    print('*** ERROR: Could not find \'client_secrets.json\' file from Google OAuth API ***')
 
-# route declarations and functionality
+# anti-forgery state token
+@app.route('/login')
+def login():
+    state = "".join(random.choice(string.ascii_uppercase+string.digits)
+                    for i in xrange(32))
+    login_session['state'] = state
+
+# *** Route declarations and functionality ***
 # route for landing page and recent items
 @app.route("/")
 def landingPage():
