@@ -5,8 +5,9 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, Item
 from flask import jsonify, make_response, session as login_session
 from flask_httpauth import HTTPBasicAuth
-from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
-import random, string, json, httplib2, requests
+from google.oauth2 import id_token
+from google.auth.transport import requests
+import random, string, json
 
 auth = HTTPBasicAuth()
 
@@ -20,6 +21,8 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 app = Flask(__name__)
 
+PROVIDERS = ['accounts.google.com', 'https://accounts.google.com']
+
 # *** Login and User Auth Functions ***
 try:
     JSON_DATA = json.loads(open('client_secrets.json', 'r').read())['web']
@@ -28,14 +31,43 @@ try:
 except:
     print('*** ERROR: Could not find \'client_secrets.json\' file from Google OAuth API ***')
 
-# anti-forgery state token
-@app.route('/login')
-def login():
-    state = "".join(random.choice(string.ascii_uppercase+string.digits)
-                    for i in xrange(32))
-    login_session['state'] = state
+# anti-forgery state token w/ Google sign-in
+def callback_auth():
+    # Google sign-in API guidelines: https://developers.google.com/identity/sign-in/web/sign-in
+    try:
+        if "idtoken" in request.form:
+            # User is trying to log in
+            # if user is already logged in
+            if "user" in login_session:
+                return_msg = make_response(jsonify(message="User is logged in.", status=201))
+            # else user is not logged in
+            else:
+                token = request.form['idtoken']
+                # verify the JWT, client ID, and that the token has not expired
+                idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+                # verify the issuer of the ID token
+                if idinfo['iss'] not in PROVIDERS:
+                    raise ValueError("Wrong Issuer")
+                # ID token is valid, can get info from decoded token
+                userid = idinfo['sub']
+                # add to session
+                login_session['user'] = token
+                login_session['userid'] = userid
 
+                return_msg = make_response(jsonify(message='Logged in Successfully', status=200))
+            
+        else:
+            # if user is logged in, log them out
+            if 'user' in login_session:
+                del login_session['user']
+                del login_session['userid']
+                return_msg = make_response(jsonify(message="Logged out Successfully", status=200))
+    # if token invalid
+    except:
+        return_msg = make_response(jsonify(message="Could not verify token", status = 400)
 
+    return_msg.headers['Content-Type'] = 'application/json'
+    return return_msg
 # *** Route declarations and functionality ***
 # route for landing page and recent items
 @app.route("/")
