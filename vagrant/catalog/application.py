@@ -7,7 +7,7 @@ from flask import jsonify, make_response, session as login_session
 from flask_httpauth import HTTPBasicAuth
 from google.oauth2 import id_token
 from google.auth.transport import requests
-import random, string, json
+import json
 
 auth = HTTPBasicAuth()
 
@@ -28,23 +28,27 @@ try:
     JSON_DATA = json.loads(open('client_secrets.json', 'r').read())['web']
     CLIENT_ID = JSON_DATA['client_id']
     CLIENT_SECRET = JSON_DATA['client_secret']
-except:
-    print('*** ERROR: Could not find \'client_secrets.json\' file from Google OAuth API ***')
+except ValueError:
+    print('*** ERROR: Could not find \'client_secrets.json\' file ***')
+
 
 # anti-forgery state token w/ Google sign-in
 def callback_auth():
-    # Google sign-in API guidelines: https://developers.google.com/identity/sign-in/web/sign-in
+    # Google sign-in API guidelines:
+    # https://developers.google.com/identity/sign-in/web/sign-in
     try:
         if "idtoken" in request.form:
             # User is trying to log in
             # if user is already logged in
             if "user" in login_session:
-                return_msg = make_response(jsonify(message="User is logged in.", status=201))
+                return_msg = make_response(jsonify(
+                             message="User is logged in.", status=201))
             # else user is not logged in
             else:
                 token = request.form['idtoken']
                 # verify the JWT, client ID, and that the token has not expired
-                idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+                idinfo = id_token.verify_oauth2_token(
+                         token, requests.Request(), CLIENT_ID)
                 # verify the issuer of the ID token
                 if idinfo['iss'] not in PROVIDERS:
                     raise ValueError("Wrong Issuer")
@@ -54,20 +58,25 @@ def callback_auth():
                 login_session['user'] = token
                 login_session['userid'] = userid
 
-                return_msg = make_response(jsonify(message='Logged in Successfully', status=200))
-            
+                return_msg = make_response(jsonify(
+                             message='Logged in Successfully', status=200))
+
         else:
             # if user is logged in, log them out
             if 'user' in login_session:
                 del login_session['user']
                 del login_session['userid']
-                return_msg = make_response(jsonify(message="Logged out Successfully", status=200))
+                return_msg = make_response(jsonify(
+                             message="Logged out Successfully", status=200))
     # if token invalid
-    except:
-        return_msg = make_response(jsonify(message="Could not verify token", status = 400)
+    except ValueError:
+        return_msg = make_response(jsonify(
+                     message="Could not verify token", status=400))
 
     return_msg.headers['Content-Type'] = 'application/json'
     return return_msg
+
+
 # *** Route declarations and functionality ***
 # route for landing page and recent items
 @app.route("/")
@@ -110,7 +119,7 @@ def newItem():
         newItem = Item(category=category, title=title, desc=desc)
         session.add(newItem)
         session.commit()
-        #flash('Item Successfully Added')
+        # flash('Item Successfully Added')
         return redirect(url_for('landingPage'))
     else:
         return render_template("new.html")
@@ -131,7 +140,7 @@ def editItem(itemTitle):
             item.category = new_cat
         session.add(item)
         session.commit()
-        #flash('Item Successfully Edited')
+        # flash('Item Successfully Edited')
         return redirect(url_for('showCategory', category=item.category.name))
     else:
         return render_template("edit.html", item=item)
@@ -145,7 +154,7 @@ def deleteItem(itemTitle):
     if request.method == 'POST':
         session.delete(item)
         session.commit()
-        #flash('Item Successfully Deleted')
+        # flash('Item Successfully Deleted')
         return redirect(url_for('landingPage'))
     else:
         return render_template("delete.html", item=item)
