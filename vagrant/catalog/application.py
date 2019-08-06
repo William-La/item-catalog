@@ -33,7 +33,8 @@ except ValueError:
 
 
 # anti-forgery state token w/ Google sign-in
-def callback_auth():
+@app.route("/googleoauth")
+def callback_oauth():
     # Google sign-in API guidelines:
     # https://developers.google.com/identity/sign-in/web/sign-in
     try:

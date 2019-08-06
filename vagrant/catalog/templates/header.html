@@ -10,4 +10,36 @@
     <div class="right-header">
         <div class="g-signin2" data-onsuccess="onSignIn"></div>
     </div>
+    <a href="/" onclick="signOut();">Sign out</a>
 </div>
+
+<script>
+function onSignIn(googleUser) {
+    var id_token = googleUser.getAuthResponse().id_token;
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'https://localhost:8000/googleoauth');
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function() {
+        console.log('Signed in as: ' + xhr.responseText);
+    };
+    xhr.send('idtoken=' + id_token);
+}
+</script>
+
+<script>
+    if (gapi.auth2){
+        function signOut() {
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function () {
+        console.log('User signed out.');
+      });
+    }
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://localhost:8000/googleoauth');
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function() {
+    console.log('User signefd out.');
+    };
+    xhr.send('signout');
+    }
+  </script>
