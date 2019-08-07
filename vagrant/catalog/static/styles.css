@@ -32,7 +32,16 @@ h1 {
     color: #ffffff;
     text-decoration: none;
     font-weight: bolder;
+}
+
+#title {
     font-size: 45px;
+}
+
+#signout {
+    font-size: 20px;
+    margin-top: 18px;
+    margin-right: 10px;
 }
 
 .right-header {

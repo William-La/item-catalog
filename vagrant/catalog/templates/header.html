@@ -6,20 +6,30 @@
 
 
 <div class="header">
-    <a href="{{url_for('landingPage')}}">Movie Catalog</a>
+    <a id="title" href="{{url_for('landingPage')}}">Movie Catalog</a>
     <div class="right-header">
         <div class="g-signin2" data-onsuccess="onSignIn"></div>
     </div>
-    <a href="/" onclick="signOut();">Sign out</a>
+    <div id="signout" class="right-header">
+        <a  href="/" onclick="signOut();">Sign out</a>
+    </div>
 </div>
 
 <script>
-function onSignIn(googleUser) {
-    var id_token = googleUser.getAuthResponse().id_token;
+function onSignIn(user) {
+    var id_token = user.getAuthResponse().id_token;
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'https://localhost:8000/googleoauth');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onload = function() {
+        item=localStorage.getItem('token');
+        if (item){
+          localStorage.setItem('token', xhr.responseText);
+        }
+        else{
+          localStorage.setItem('token', xhr.responseText);
+          window.location.href='http://localhost:8000';
+        }
         console.log('Signed in as: ' + xhr.responseText);
     };
     xhr.send('idtoken=' + id_token);
@@ -27,19 +37,20 @@ function onSignIn(googleUser) {
 </script>
 
 <script>
+function signOut() {
+    localStorage.removeItem('token');
     if (gapi.auth2){
-        function signOut() {
       var auth2 = gapi.auth2.getAuthInstance();
       auth2.signOut().then(function () {
-        console.log('User signed out.');
+      console.log('Signed out user');
       });
     }
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://localhost:8000/googleoauth');
+    xhr.open('POST', 'https://localhost:8000/googleoauth');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onload = function() {
-    console.log('User signefd out.');
+      window.location.href='http://localhost:8000';
     };
     xhr.send('signout');
-    }
+}
   </script>
