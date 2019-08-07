@@ -56,16 +56,8 @@ class Item(Base):
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
-    user = Column(String(32), index=True)
     pic = Column(String)
-    email = Column(String)
-    pHash = Column(String(64))
-
-    def hash_pass(self, pWord):
-        self.password_hash = pwd_context.encrypt(password)
-
-    def verify_pass(self, pWord):
-        return pwd_context.verify(password, self.password_hash)
+    email = Column(String, nullable=False)
 
     def gen_auth_token(self, expiration=3600):
         s = Serializer(sKey, expires_in=expiration)
@@ -85,6 +77,15 @@ class User(Base):
             return None
         user_id = d['id']
         return user_id
+
+    # jsonify function
+    @property
+    def serialize(self):
+        return{
+            'id': self.id
+            'email': self.email
+            'pic': self.pic
+        }
 
 
 engine = create_engine('sqlite:///itemCatalog.db')
