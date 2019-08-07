@@ -4,12 +4,12 @@ from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, Item
 from flask import jsonify, make_response, session as login_session
-from flask_httpauth import HTTPBasicAuth
+from flask_httpauth import HTTPTokenAuth
 from google.oauth2 import id_token
 from google.auth.transport import requests
 import json
 
-auth = HTTPBasicAuth()
+auth = HTTPTokenAuth(scheme="token")
 
 
 engine = create_engine('sqlite:///itemCatalog.db',
@@ -32,8 +32,17 @@ except ValueError:
     print('*** ERROR: Could not find \'client_secrets.json\' file ***')
 
 
+# verifying user session
+@auth.verify_token
+def verify_token(token):
+    userid = User.verify_auth_token(token)
+    if userid != None:
+        db_user = session.query(User).filter_by(id=userid).first()
+
+
+
 # anti-forgery state token w/ Google sign-in
-@app.route("/googleoauth")
+@app.route("/googleoauth", methods=['GET', 'POST'])
 def callback_oauth():
     # Google sign-in API guidelines:
     # https://developers.google.com/identity/sign-in/web/sign-in
@@ -46,35 +55,50 @@ def callback_oauth():
                              message="User is logged in.", status=201))
             # else user is not logged in
             else:
-                token = request.form['idtoken']
+                google_token = request.form['idtoken']
                 # verify the JWT, client ID, and that the token has not expired
                 idinfo = id_token.verify_oauth2_token(
-                         token, requests.Request(), CLIENT_ID)
+                         google_token, requests.Request(), CLIENT_ID)
                 # verify the issuer of the ID token
                 if idinfo['iss'] not in PROVIDERS:
                     raise ValueError("Wrong Issuer")
+
                 # ID token is valid, can get info from decoded token
                 userid = idinfo['sub']
+                
+                # check if user is in the db
+                userdb = session.query(User).filter_by(id=userid).first()
+                # if user is not in the db, create new user
+                if not userdb:
+                    pic = idinfo['picture']
+                    email = idinfo['email']
+                    userdb = User(id=userid, picture=pic, email=email)
+                    session.add(userdb)
+                    session.commit()
+                    # flash('New user created!')
+                # if user is in the db
+                else:
+                    print('WIP because flash not implemented yet')
+                    # flash('User logged in!')
                 # add to session
-                login_session['user'] = token
+                login_session['token'] = userdb.generate_auth_token()
+                login_session['user'] = google_token
                 login_session['userid'] = userid
 
-                return_msg = make_response(jsonify(
-                             message='Logged in Successfully', status=200))
+                return_msg = login_session['token']
 
         else:
             # if user is logged in, log them out
             if 'user' in login_session:
+                g.current_user = None
+                del login_session['token']
                 del login_session['user']
                 del login_session['userid']
-                return_msg = make_response(jsonify(
-                             message="Logged out Successfully", status=200))
+                return_msg = "Logged out successfully"
     # if token invalid
     except ValueError:
-        return_msg = make_response(jsonify(
-                     message="Could not verify token", status=400))
+        return_msg = '*** ERROR: invalid token ***'
 
-    return_msg.headers['Content-Type'] = 'application/json'
     return return_msg
 
 

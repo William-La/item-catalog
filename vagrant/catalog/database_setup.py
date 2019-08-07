@@ -55,7 +55,8 @@ class Item(Base):
 # user table
 class User(Base):
     __tablename__ = 'user'
-    id = Column(Integer, primary_key=True)
+    # id will be google auth 'sub' var
+    id = Column(String, primary_key=True)
     pic = Column(String)
     email = Column(String, nullable=False)
 
