@@ -3,6 +3,7 @@
 {% block content %}
 {% include "sidebar.html" %}
     <div class="main">
+        <a id="itemButton" href="{{url_for('newItem')}}">add new item</a>
         <h1 id="diffHeader">Recently Added Movies</h1>
         {% if recentItems != [] %}
         <div class="items">

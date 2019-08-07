@@ -107,6 +107,7 @@ def showItem(category, itemTitle):
 # route for creating a new item (requires login)
 @app.route("/catalog/new", methods=['GET', 'POST'])
 def newItem():
+    # if the user has created a new item
     if request.method == 'POST':
         title = ""
         desc = ""
@@ -122,6 +123,7 @@ def newItem():
         session.commit()
         # flash('Item Successfully Added')
         return redirect(url_for('landingPage'))
+    # else the user is trying to create a new item
     else:
         return render_template("new.html")
 
@@ -130,6 +132,7 @@ def newItem():
 @app.route("/catalog/<itemTitle>/edit", methods=['GET', 'POST'])
 def editItem(itemTitle):
     item = session.query(Item).filter_by(title=itemTitle).first()
+    # if the user has edited the item
     if request.method == 'POST':
         if request.form['title']:
             item.title = request.form['title']
@@ -143,6 +146,7 @@ def editItem(itemTitle):
         session.commit()
         # flash('Item Successfully Edited')
         return redirect(url_for('showCategory', category=item.category.name))
+    # else the user is going to edit
     else:
         return render_template("edit.html", item=item)
 
@@ -152,16 +156,18 @@ def editItem(itemTitle):
 def deleteItem(itemTitle):
     item = session.query(Item).filter_by(title=itemTitle).first()
     category = item.category.name
+    # if the user has deleted the item
     if request.method == 'POST':
         session.delete(item)
         session.commit()
         # flash('Item Successfully Deleted')
         return redirect(url_for('landingPage'))
+    # else the user is going to delete
     else:
         return render_template("delete.html", item=item)
 
 
-# JSON function
+# JSON endpoint function
 @app.route("/catalog.json")
 def catalogJSON():
     categories = session.query(Category).all()
