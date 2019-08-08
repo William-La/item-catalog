@@ -1,15 +1,15 @@
 #!/usr/bin/env python
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, g, render_template, request, redirect, url_for, flash
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Category, Item
+from database_setup import Base, Category, Item, User
 from flask import jsonify, make_response, session as login_session
 from flask_httpauth import HTTPTokenAuth
 from google.oauth2 import id_token
 from google.auth.transport import requests
 import json
 
-auth = HTTPTokenAuth(scheme="token")
+auth = HTTPTokenAuth(scheme="Token")
 
 
 engine = create_engine('sqlite:///itemCatalog.db',
@@ -33,36 +33,29 @@ except ValueError:
 
 
 # verifying user session
-@auth.verify_token
-def verify_token(token):
-    userid = User.verify_auth_token(token)
-    if userid != None:
-        db_user = session.query(User).filter_by(id=userid).first()
-
-
 
 # anti-forgery state token w/ Google sign-in
-@app.route("/googleoauth", methods=['GET', 'POST'])
+@app.route("/googleoauth", methods=['POST'])
 def callback_oauth():
     # Google sign-in API guidelines:
     # https://developers.google.com/identity/sign-in/web/sign-in
     try:
-        if "idtoken" in request.form:
+        if 'idtoken' in request.form:
             # User is trying to log in
             # if user is already logged in
-            if "user" in login_session:
-                return_msg = make_response(jsonify(
-                             message="User is logged in.", status=201))
+            if 'token' in login_session:
+                print 'logged in'
+                return login_session.get('token', None)
             # else user is not logged in
             else:
-                google_token = request.form['idtoken']
+                token = request.form['idtoken']
                 # verify the JWT, client ID, and that the token has not expired
-                idinfo = id_token.verify_oauth2_token(
-                         google_token, requests.Request(), CLIENT_ID)
+                idinfo = id_token.verify_oauth2_token(token,
+                                                  requests.Request(),
+                                                  CLIENT_ID)
                 # verify the issuer of the ID token
                 if idinfo['iss'] not in PROVIDERS:
                     raise ValueError("Wrong Issuer")
-
                 # ID token is valid, can get info from decoded token
                 userid = idinfo['sub']
                 
@@ -70,9 +63,9 @@ def callback_oauth():
                 userdb = session.query(User).filter_by(id=userid).first()
                 # if user is not in the db, create new user
                 if not userdb:
-                    pic = idinfo['picture']
+                    
                     email = idinfo['email']
-                    userdb = User(id=userid, picture=pic, email=email)
+                    userdb = User(id=userid, email=email)
                     session.add(userdb)
                     session.commit()
                     # flash('New user created!')
@@ -81,33 +74,40 @@ def callback_oauth():
                     print('WIP because flash not implemented yet')
                     # flash('User logged in!')
                 # add to session
-                login_session['token'] = userdb.generate_auth_token()
-                login_session['user'] = google_token
+                print 'what'
+                login_session['token'] = userdb.gen_auth_token()
+                login_session['user'] = token
                 login_session['userid'] = userid
+                
+                return login_session.get('token', None)
 
-                return_msg = login_session['token']
-
-        else:
+        elif 'token' in login_session:
+            print('signout')
             # if user is logged in, log them out
-            if 'user' in login_session:
-                g.current_user = None
-                del login_session['token']
-                del login_session['user']
-                del login_session['userid']
-                return_msg = "Logged out successfully"
+            g.current_user = None
+            login_session.pop('token', None)
+            login_session.pop('user', None)
+            login_session.pop('userid', None)
+            return 'logged out'
     # if token invalid
     except ValueError:
-        return_msg = '*** ERROR: invalid token ***'
+        pass
+        #return_msg = '*** ERROR: invalid token ***'
 
-    return return_msg
+    return redirect(url_for('landingPage'))
 
 
 # *** Route declarations and functionality ***
 # route for landing page and recent items
 @app.route("/")
 def landingPage():
+    user = None
+    if 'token' in login_session:
+        print("there is a user!")
+        user = User.verify_auth_token(login_session['token'])
     recentItems = session.query(Item).order_by(Item.id.desc())[0:8]
-    return render_template('landing.html', recentItems=recentItems)
+    return render_template('landing.html', recentItems=recentItems, user=user,
+           CLIENT_ID=CLIENT_ID)
 
 
 # route for showing the items in a category
@@ -116,23 +116,31 @@ def landingPage():
 def showCategory(category):
     cat_id = session.query(Category).filter_by(name=category).first().id
     items = session.query(Item).filter_by(cat_id=cat_id).all()
-    return render_template("category.html", items=items, category=category)
+    return render_template("category.html", items=items, category=category,
+           CLIENT_ID=CLIENT_ID)
 
 
 # route for showing an item and its description
 @app.route("/catalog/<category>/<itemTitle>")
 def showItem(category, itemTitle):
+    user = None
+    if 'token' in login_session:
+        user = User.verify_auth_token(login_session['token'])
     cat_id = session.query(Category).filter_by(name=category).first().id
     item = session.query(Item).filter_by(
            cat_id=cat_id, title=itemTitle).first()
-    return render_template("item.html", item=item)
+    return render_template("item.html", item=item, user=user,
+           CLIENT_ID=CLIENT_ID)
 
 
 # route for creating a new item (requires login)
 @app.route("/catalog/new", methods=['GET', 'POST'])
 def newItem():
+    if 'token' not in login_session:
+        # flash('Unauthorized. Please log in.')
+        return redirect(url_for('landingPage'))
     # if the user has created a new item
-    if request.method == 'POST':
+    elif request.method == 'POST':
         title = ""
         desc = ""
         if request.form['title']:
@@ -149,15 +157,18 @@ def newItem():
         return redirect(url_for('landingPage'))
     # else the user is trying to create a new item
     else:
-        return render_template("new.html")
+        return render_template("new.html", CLIENT_ID=CLIENT_ID)
 
 
 # route for editing an item (requires login)
 @app.route("/catalog/<itemTitle>/edit", methods=['GET', 'POST'])
 def editItem(itemTitle):
     item = session.query(Item).filter_by(title=itemTitle).first()
+    if 'token' not in login_session:
+        # flash('Unauthorized. Please log in.')
+        return redirect(url_for('landingPage'))
     # if the user has edited the item
-    if request.method == 'POST':
+    elif request.method == 'POST':
         if request.form['title']:
             item.title = request.form['title']
         if request.form['desc']:
@@ -172,7 +183,7 @@ def editItem(itemTitle):
         return redirect(url_for('showCategory', category=item.category.name))
     # else the user is going to edit
     else:
-        return render_template("edit.html", item=item)
+        return render_template("edit.html", item=item, CLIENT_ID=CLIENT_ID)
 
 
 # route for deleting an item (requires login)
@@ -180,15 +191,18 @@ def editItem(itemTitle):
 def deleteItem(itemTitle):
     item = session.query(Item).filter_by(title=itemTitle).first()
     category = item.category.name
+    if 'token' not in login_session:
+        # flash('Unauthorized. Please log in.')
+        return redirect(url_for('landingPage'))
     # if the user has deleted the item
-    if request.method == 'POST':
+    elif request.method == 'POST':
         session.delete(item)
         session.commit()
         # flash('Item Successfully Deleted')
         return redirect(url_for('landingPage'))
     # else the user is going to delete
     else:
-        return render_template("delete.html", item=item)
+        return render_template("delete.html", item=item, CLIENT_ID=CLIENT_ID)
 
 
 # JSON endpoint function
@@ -199,5 +213,6 @@ def catalogJSON():
 
 
 if __name__ == '__main__':
+    app.secret_key = 'super secret key'
     app.debug = True
     app.run(host='0.0.0.0', port=8000)

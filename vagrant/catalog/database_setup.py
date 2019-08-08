@@ -57,7 +57,6 @@ class User(Base):
     __tablename__ = 'user'
     # id will be google auth 'sub' var
     id = Column(String, primary_key=True)
-    pic = Column(String)
     email = Column(String, nullable=False)
 
     def gen_auth_token(self, expiration=3600):
