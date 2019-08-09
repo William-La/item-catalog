@@ -9,14 +9,14 @@ It is recommended to run this project in a linux virtual machine. The tools [Vir
 
 Set Up
 ------
-## Repository and Virtual Machine
+### Repository and Virtual Machine
 Clone, download, or fork this repository and create a copy of the repository on your local computer. To clone the repository, run the following line in your terminal (replace the placeholder directory name).
 
 ```terminal
 git clone https://github.com/William-La/item-catalog.git <DIRECTORY-NAME-HERE>
 ```
 
-After creating a local copy of the repository, `cd` into the directory and then `cd` into the Vagrant folder. Once in the vagrant directory, run the following to set up and start the virtual machine.
+After creating a local copy of the repository, `cd` into the directory and then `cd` into the "vagrant" folder. Once in the vagrant directory, run the following to set up and start the virtual machine. This may take a while the first time it is ran.
 
 ```terminal
 vagrant up
@@ -28,13 +28,13 @@ Once the virtual machine is started, log into it with the following command.
 vagrant ssh
 ```
 
-## Google OAuth2 Credentials
+### Google OAuth2 Credentials
 A Google API project and an OAuth 2.0 Client ID must be created to be able to run this project. To create a project, go to the [Google Developer API site](http://console.developers.google.com), click on "Select a project", and press the "NEW PROJECT" button. Once you've created and selected your new project, go to the "Credentials" tab on the same [Google Developer API site](http://console.developers.google.com) site. Go to the "OAuth consent screen" tab. Fill out the "Application Name" section, make sure there is a "Support email" select, and then press save at the bottom. 
 
-To create an OAuth 2.0 client ID, go back to the "Credentials" tab, press "Create credentials", then select "OAuth client ID". For "Application type", select "Web application". Next, under "Authorized JavaScript origins" add 'http://localhost:8000' and under "Authorized redirect URIs" add 'http://localhost:8000/googleoauth'. After you've created the OAuth client ID, download the JSON file and rename it to 'client_secrets.json'. Include this file in the 'catalog' directory of the git repository.
+To create an OAuth 2.0 client ID, go back to the "Credentials" tab, press "Create credentials", then select "OAuth client ID". For "Application type", select "Web application". Next, under "Authorized JavaScript origins" add `http://localhost:8000'` and under "Authorized redirect URIs" add `http://localhost:8000/googleoauth`. After you've created the OAuth client ID, download the JSON file and rename it to `client_secrets.json`. Include this file in the 'catalog' directory of the git repository.
 
-## Database
-Once you're in the virtual machine (after running the `vagrant ssh` command above), `cd` into the catalog directory by running the following.
+### Database
+Once you're in the virtual machine (after running the `vagrant ssh` command above), `cd` into the "catalog" directory by running the following.
 
 ```terminal
 cd /vagrant/catalog
@@ -49,6 +49,20 @@ python fill_database.py
 
 Usage
 -----
+
+To start the web app, run the following line while in the "catalog" directory of the virtual machine.
+
+```terminal
+python application.py
+```
+
+Once it is up and running, go to `http://localhost:8000` in your web browser. You should be on the landing page of the web application. You can then browse through the site to see the various entries present in the database.
+
+To be able to create, edit, or delete items, you must log in through the Google Sign-in button. Once logged in, you will be able to see buttons which allow you to add, edit, and delete items as well as a sign out button. 
+
+### JSON API Endpoint
+
+While the project is running, `http://localhost:8000/catalog.json` will retrieve the JSON file for the entire database.
 
 Program Design
 --------------
