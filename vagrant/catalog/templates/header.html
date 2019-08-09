@@ -16,6 +16,8 @@
         <div class="g-signin2" data-onsuccess="onSignIn"></div>
     </div>
     <div id="signout" class="right-header">
+        {% if user %}
         <a  href="/" onclick="signOut();">Sign out</a>
+        {% endif %}
     </div>
 </div>
