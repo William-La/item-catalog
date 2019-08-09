@@ -70,7 +70,7 @@ session.add(category4)
 session.commit()
 
 
-bio1 = Item(category=category4, title="Unseen Figurines", desc="A story of discrimination, grit, and great achievement that follows black, female mathematicians working for NASA and assisting in America's first obital spaceflight.")
+bio1 = Item(category=category4, title="Unseen Figurines", desc="A story of discrimination, grit, and great achievement that follows black, female mathematicians working for NASA and assisting in America's first orbital spaceflight.")
 
 session.add(bio1)
 session.commit()
