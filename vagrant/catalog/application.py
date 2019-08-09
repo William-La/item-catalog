@@ -32,30 +32,29 @@ except ValueError:
     print('*** ERROR: Could not find \'client_secrets.json\' file ***')
 
 
-# verifying user session
-
 # anti-forgery state token w/ Google sign-in
 @app.route("/googleoauth", methods=['POST'])
 def callback_oauth():
     # Google sign-in API guidelines:
     # https://developers.google.com/identity/sign-in/web/sign-in
     try:
+        # if user is trying to log in
         if 'idtoken' in request.form:
-            # User is trying to log in
             # if user is already logged in
             if 'token' in login_session:
-                print 'logged in'
                 return login_session.get('token', None)
             # else user is not logged in
             else:
                 token = request.form['idtoken']
+
                 # verify the JWT, client ID, and that the token has not expired
-                idinfo = id_token.verify_oauth2_token(token,
-                                                  requests.Request(),
-                                                  CLIENT_ID)
+                idinfo = id_token.verify_oauth2_token(token, requests.Request(),
+                         CLIENT_ID)
+
                 # verify the issuer of the ID token
                 if idinfo['iss'] not in PROVIDERS:
                     raise ValueError("Wrong Issuer")
+
                 # ID token is valid, can get info from decoded token
                 userid = idinfo['sub']
                 
@@ -63,18 +62,17 @@ def callback_oauth():
                 userdb = session.query(User).filter_by(id=userid).first()
                 # if user is not in the db, create new user
                 if not userdb:
-                    
                     email = idinfo['email']
+                    # create a new db user
                     userdb = User(id=userid, email=email)
                     session.add(userdb)
                     session.commit()
                     # flash('New user created!')
-                # if user is in the db
+                # else if user is already in the db
                 else:
                     print('WIP because flash not implemented yet')
                     # flash('User logged in!')
                 # add to session
-                print 'what'
                 login_session['token'] = userdb.gen_auth_token()
                 login_session['user'] = token
                 login_session['userid'] = userid
@@ -82,17 +80,16 @@ def callback_oauth():
                 return login_session.get('token', None)
 
         elif 'token' in login_session:
-            print('signout')
             # if user is logged in, log them out
             g.current_user = None
             login_session.pop('token', None)
             login_session.pop('user', None)
             login_session.pop('userid', None)
+            # flash('User signed out')
             return 'logged out'
     # if token invalid
     except ValueError:
         pass
-        #return_msg = '*** ERROR: invalid token ***'
 
     return redirect(url_for('landingPage'))
 
@@ -102,10 +99,13 @@ def callback_oauth():
 @app.route("/")
 def landingPage():
     user = None
+    # if a user is logged in, then 'token' will be in login session
     if 'token' in login_session:
-        print("there is a user!")
+        # verify the user
         user = User.verify_auth_token(login_session['token'])
     recentItems = session.query(Item).order_by(Item.id.desc())[0:8]
+    # pass the user parameter to determine if 'add new item' and 'signout'
+    # button is shown
     return render_template('landing.html', recentItems=recentItems, user=user,
            CLIENT_ID=CLIENT_ID)
 
@@ -114,9 +114,15 @@ def landingPage():
 @app.route("/catalog/<category>")
 @app.route("/catalog/<category>/items")
 def showCategory(category):
+    # if a user is logged in, then 'token' will be in login session
+    user = None
+    if 'token' in login_session:
+        # verify the user
+        user = User.verify_auth_token(login_session['token'])
     cat_id = session.query(Category).filter_by(name=category).first().id
     items = session.query(Item).filter_by(cat_id=cat_id).all()
-    return render_template("category.html", items=items, category=category,
+    # pass the user parameter to determine if 'signout' button is shown
+    return render_template("category.html", items=items, category=category, user=user,
            CLIENT_ID=CLIENT_ID)
 
 
@@ -124,11 +130,14 @@ def showCategory(category):
 @app.route("/catalog/<category>/<itemTitle>")
 def showItem(category, itemTitle):
     user = None
+    # if a user is logged in, then 'token' will be in login session
     if 'token' in login_session:
         user = User.verify_auth_token(login_session['token'])
     cat_id = session.query(Category).filter_by(name=category).first().id
     item = session.query(Item).filter_by(
            cat_id=cat_id, title=itemTitle).first()
+    # pass the user parameter to determine if 'edit', 'delete', and 'signout'
+    # button is shown
     return render_template("item.html", item=item, user=user,
            CLIENT_ID=CLIENT_ID)
 
@@ -136,6 +145,7 @@ def showItem(category, itemTitle):
 # route for creating a new item (requires login)
 @app.route("/catalog/new", methods=['GET', 'POST'])
 def newItem():
+    # redirect if user is not logged in
     if 'token' not in login_session:
         # flash('Unauthorized. Please log in.')
         return redirect(url_for('landingPage'))
@@ -164,6 +174,7 @@ def newItem():
 @app.route("/catalog/<itemTitle>/edit", methods=['GET', 'POST'])
 def editItem(itemTitle):
     item = session.query(Item).filter_by(title=itemTitle).first()
+    # redirect if user is not logged in
     if 'token' not in login_session:
         # flash('Unauthorized. Please log in.')
         return redirect(url_for('landingPage'))
@@ -191,6 +202,7 @@ def editItem(itemTitle):
 def deleteItem(itemTitle):
     item = session.query(Item).filter_by(title=itemTitle).first()
     category = item.category.name
+    # redirect if user is not logged in
     if 'token' not in login_session:
         # flash('Unauthorized. Please log in.')
         return redirect(url_for('landingPage'))

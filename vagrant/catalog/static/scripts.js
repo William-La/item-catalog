@@ -1,3 +1,5 @@
+// code adapted from:
+// https://developers.google.com/identity/sign-in/web/sign-in
 function onSignIn(googleUser) {
   var id_token = googleUser.getAuthResponse().id_token;
   var xhr = new XMLHttpRequest();
@@ -11,7 +13,7 @@ function onSignIn(googleUser) {
       window.location.href = 'http://localhost:8000/';
     }
   };
-  xhr.send('idtoken=' + id_token);
+  xhr.send('idtoken='+id_token);
 }
 
 function signOut() {
@@ -29,45 +31,4 @@ function signOut() {
     window.location.href = 'http://localhost:8000/';
   };
   xhr.send('signout');
-}
-
-function getRequestHandler(url) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'http://localhost:8000' + url);
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  if (localStorage.getItem('token')) {
-    xhr.setRequestHeader(
-      'Authorization',
-      'Token ' + localStorage.getItem('token')
-    );
-  }
-  xhr.onload = function() {
-    if (xhr.responseText == 'Unauthorized Access') {
-      window.location.href = 'http://localhost:8000/';
-    } else {
-      document.querySelector('#response').innerHTML = xhr.responseText;
-      window.history.pushState('object or string', 'Title', url);
-
-      if (localStorage.getItem('token')) {
-        refreshToken();
-      }
-    }
-  };
-  xhr.send();
-}
-
-
-function refreshToken() {
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'http://localhost:8000/token');
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  xhr.setRequestHeader(
-    'Authorization',
-    'Token ' + localStorage.getItem('token')
-  );
-
-  xhr.onload = function() {
-    localStorage.setItem('token', xhr.responseText);
-  };
-  xhr.send();
 }
