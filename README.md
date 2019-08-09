@@ -89,3 +89,5 @@ My Udacity Mentor, Tim Nelson
 The Full Stack Web Developer Nanodegree Community
 
 [Google OAuth Documentation](https://developers.google.com/identity/sign-in/web/sign-in)
+
+[Nicolas Hanout](https://github.com/nicolash92/) for assistance with Google OAuth
