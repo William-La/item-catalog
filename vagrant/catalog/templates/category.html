@@ -5,12 +5,18 @@
 
 <div class="main">
     <h1 id="diffHeader">{{ category }}</h1>
+    {% if items != [] %}
     <div class="items">
         {% for i in items %}
         <a href="{{url_for('showItem', category = i.category.name, itemTitle = i.title)}}">{{i.title}}</a>
         <br>
         {% endfor %}
     </div>
+    {% else %}
+    <div>
+            <p>There are no items in this section.</p>
+    </div>
+    {% endif %}
 </div>
 
 {% endblock %}
