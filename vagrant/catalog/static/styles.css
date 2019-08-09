@@ -44,6 +44,13 @@ h1 {
     margin-right: 10px;
 }
 
+#flash {
+    font-size: 20px;
+    margin-top: 18px;
+    margin-right: 10px;
+    color: #F45B69;
+}
+
 .right-header {
     float: right;
     margin-top: 13px;

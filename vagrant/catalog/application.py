@@ -67,11 +67,10 @@ def callback_oauth():
                     userdb = User(id=userid, email=email)
                     session.add(userdb)
                     session.commit()
-                    # flash('New user created!')
+                    flash('New user created!')
                 # else if user is already in the db
                 else:
-                    print('WIP because flash not implemented yet')
-                    # flash('User logged in!')
+                    flash('User logged in!')
                 # add to session
                 login_session['token'] = userdb.gen_auth_token()
                 login_session['user'] = token
@@ -85,7 +84,7 @@ def callback_oauth():
             login_session.pop('token', None)
             login_session.pop('user', None)
             login_session.pop('userid', None)
-            # flash('User signed out')
+            flash('User signed out')
             return 'logged out'
     # if token invalid
     except ValueError:
@@ -147,7 +146,7 @@ def showItem(category, itemTitle):
 def newItem():
     # redirect if user is not logged in
     if 'token' not in login_session:
-        # flash('Unauthorized. Please log in.')
+        flash('Unauthorized. Please log in.')
         return redirect(url_for('landingPage'))
     # if the user has created a new item
     elif request.method == 'POST':
@@ -163,7 +162,7 @@ def newItem():
         newItem = Item(category=category, title=title, desc=desc)
         session.add(newItem)
         session.commit()
-        # flash('Item Successfully Added')
+        flash('Item Successfully Added')
         return redirect(url_for('landingPage'))
     # else the user is trying to create a new item
     else:
@@ -190,7 +189,7 @@ def editItem(itemTitle):
             item.category = new_cat
         session.add(item)
         session.commit()
-        # flash('Item Successfully Edited')
+        flash('Item Successfully Edited')
         return redirect(url_for('showCategory', category=item.category.name))
     # else the user is going to edit
     else:
@@ -210,7 +209,7 @@ def deleteItem(itemTitle):
     elif request.method == 'POST':
         session.delete(item)
         session.commit()
-        # flash('Item Successfully Deleted')
+        flash('Item Successfully Deleted')
         return redirect(url_for('landingPage'))
     # else the user is going to delete
     else:
