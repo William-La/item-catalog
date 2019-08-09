@@ -33,10 +33,10 @@ vagrant ssh
 ### Google OAuth2 Credentials
 A Google API project and an OAuth 2.0 Client ID must be created to be able to run this project. To create a project, go to the [Google Developer API site](http://console.developers.google.com), click on "Select a project", and press the "NEW PROJECT" button. Once you've created and selected your new project, go to the "Credentials" tab on the same [Google Developer API site](http://console.developers.google.com) site. Go to the "OAuth consent screen" tab. Fill out the "Application Name" section, make sure there is a "Support email" select, and then press save at the bottom. 
 
-To create an OAuth 2.0 client ID, go back to the "Credentials" tab, press "Create credentials", then select "OAuth client ID". For "Application type", select "Web application". Next, under "Authorized JavaScript origins" add `http://localhost:8000'` and under "Authorized redirect URIs" add `http://localhost:8000/googleoauth`. After you've created the OAuth client ID, download the JSON file and rename it to `client_secrets.json`. Include this file in the 'catalog' directory of the git repository.
+To create an OAuth 2.0 client ID, go back to the "Credentials" tab, press "Create credentials", then select "OAuth client ID". For "Application type", select "Web application". Next, under "Authorized JavaScript origins" add `http://localhost:8000'` and under "Authorized redirect URIs" add `http://localhost:8000/googleoauth`. After you've created the OAuth client ID, download the JSON file and rename it to `client_secrets.json`. Include this file in the catalog directory of the git repository.
 
 ### Database
-Once you're in the virtual machine (after running the `vagrant ssh` command above), `cd` into the "catalog" directory by running the following.
+Once you're in the virtual machine (after running the `vagrant ssh` command above), `cd` into the catalog directory by running the following.
 
 ```terminal
 cd /vagrant/catalog
@@ -53,7 +53,7 @@ python fill_database.py
 Usage
 -----
 
-To start the web app, run the following line while in the "catalog" directory of the virtual machine.
+To start the web app, run the following line while in the catalog directory of the virtual machine.
 
 ```terminal
 python application.py
@@ -83,6 +83,9 @@ This web app is very much a development app. Factors that should be changed if m
 Acknowledgements
 ----------------
 [Udacity](https://www.udacity.com/)
+
 My Udacity Mentor, Tim Nelson
+
 The Full Stack Web Developer Nanodegree Community
+
 [Google OAuth Documentation](https://developers.google.com/identity/sign-in/web/sign-in)
