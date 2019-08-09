@@ -2,10 +2,12 @@
 
 Item catalog is a web application that allows users to browse categories and items stored in a database. Authenticated users are able to post, edit, and delete items. Users are authenticated through a third-party authentication service. The theme used for the sample database is a movie catalog website, where users can submit movie reviews. This project is a requirement for Udacity's Full Stack Web Developer Nanodegree.
 
+
 Required Software
 -----------------
 
 It is recommended to run this project in a linux virtual machine. The tools [VirtualBox](https://www.virtualbox.org/wiki/Download_Old_Builds_5_1) and [Vagrant](https://www.vagrantup.com/) allow us to host the virtual machine. For information regarding their installation, please reference the "Install VirtualBox" and "Install Vagrant" headers on [this Udacity github page](https://github.com/udacity/fullstack-nanodegree-vm). 
+
 
 Set Up
 ------
@@ -47,6 +49,7 @@ python database_setup.py
 python fill_database.py
 ```
 
+
 Usage
 -----
 
@@ -64,7 +67,22 @@ To be able to create, edit, or delete items, you must log in through the Google 
 
 While the project is running, `http://localhost:8000/catalog.json` will retrieve the JSON file for the entire database.
 
+
 Program Design
 --------------
 
 This web app utilizes the Flask web framework to create a front end which is responsive to users' requests and inputs. It also utilizes SQLalchemy to interact with the web app's backend. User authentication occurs through Google's OAuth2 API, which allows users to interact with the site with one of their existing Google accounts. 
+
+
+Points to Consider
+------------------
+
+This web app is very much a development app. Factors that should be changed if moving to a production site include the creatomg a secure Flask key, removing debug mode, and including more forms of third party authentication.
+
+
+Acknowledgements
+----------------
+[Udacity](https://www.udacity.com/)
+My Udacity Mentor, Tim Nelson
+The Full Stack Web Developer Nanodegree Community
+[Google OAuth Documentation](https://developers.google.com/identity/sign-in/web/sign-in)
