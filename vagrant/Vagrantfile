@@ -27,15 +27,23 @@ Vagrant.configure("2") do |config|
     pip3 install --upgrade pip
     pip3 install flask packaging oauth2client redis passlib flask-httpauth
     pip3 install sqlalchemy flask-sqlalchemy psycopg2-binary bleach requests
+    pip3 install --upgrade google
     pip3 install --upgrade google-auth
+    pip3 install --upgrade google-auth-httplib2
+    pip3 install --upgrade google-auth-oauthlib
     pip3 install --upgrade google-api-python-client
+    pip3 install --upgrade Werkzeug
 
     apt-get -qqy install python python-pip
     pip2 install --upgrade pip
     pip2 install flask packaging oauth2client redis passlib flask-httpauth
     pip2 install sqlalchemy flask-sqlalchemy psycopg2-binary bleach requests
+    pip2 install --upgrade google
     pip2 install --upgrade google-auth
+    pip2 install --upgrade google-auth-httplib2
+    pip2 install --upgrade google-auth-oauthlib
     pip2 install --upgrade google-api-python-client
+    pip2 install --upgrade Werkzeug
 
     su postgres -c 'createuser -dRS vagrant'
     su vagrant -c 'createdb'
