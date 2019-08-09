@@ -48,8 +48,9 @@ def callback_oauth():
                 token = request.form['idtoken']
 
                 # verify the JWT, client ID, and that the token has not expired
-                idinfo = id_token.verify_oauth2_token(token, requests.Request(),
-                         CLIENT_ID)
+                idinfo = id_token.verify_oauth2_token(token,
+                                                      requests.Request(),
+                                                      CLIENT_ID)
 
                 # verify the issuer of the ID token
                 if idinfo['iss'] not in PROVIDERS:
@@ -57,7 +58,7 @@ def callback_oauth():
 
                 # ID token is valid, can get info from decoded token
                 userid = idinfo['sub']
-                
+
                 # check if user is in the db
                 userdb = session.query(User).filter_by(id=userid).first()
                 # if user is not in the db, create new user
@@ -75,7 +76,7 @@ def callback_oauth():
                 login_session['token'] = userdb.gen_auth_token()
                 login_session['user'] = token
                 login_session['userid'] = userid
-                
+
                 return login_session.get('token', None)
 
         elif 'token' in login_session:
@@ -106,7 +107,7 @@ def landingPage():
     # pass the user parameter to determine if 'add new item' and 'signout'
     # button is shown
     return render_template('landing.html', recentItems=recentItems, user=user,
-           CLIENT_ID=CLIENT_ID)
+                           CLIENT_ID=CLIENT_ID)
 
 
 # route for showing the items in a category
@@ -121,8 +122,8 @@ def showCategory(category):
     cat_id = session.query(Category).filter_by(name=category).first().id
     items = session.query(Item).filter_by(cat_id=cat_id).all()
     # pass the user parameter to determine if 'signout' button is shown
-    return render_template("category.html", items=items, category=category, user=user,
-           CLIENT_ID=CLIENT_ID)
+    return render_template("category.html", items=items, category=category,
+                           user=user, CLIENT_ID=CLIENT_ID)
 
 
 # route for showing an item and its description
@@ -138,7 +139,7 @@ def showItem(category, itemTitle):
     # pass the user parameter to determine if 'edit', 'delete', and 'signout'
     # button is shown
     return render_template("item.html", item=item, user=user,
-           CLIENT_ID=CLIENT_ID)
+                           CLIENT_ID=CLIENT_ID)
 
 
 # route for creating a new item (requires login)
@@ -224,6 +225,7 @@ def catalogJSON():
 
 
 if __name__ == '__main__':
+    # change to secure secret key if going to production site
     app.secret_key = 'super secret key'
     app.debug = True
     app.run(host='0.0.0.0', port=8000)
