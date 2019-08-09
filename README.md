@@ -31,7 +31,7 @@ vagrant ssh
 ```
 
 ### Google OAuth2 Credentials
-A Google API project and an OAuth 2.0 Client ID must be created to be able to run this project. To create a project, go to the [Google Developer API site](http://console.developers.google.com), click on "Select a project", and press the "NEW PROJECT" button. Once you've created and selected your new project, go to the "Credentials" tab on the same [Google Developer API site](http://console.developers.google.com) site. Go to the "OAuth consent screen" tab. Fill out the "Application Name" section, make sure there is a "Support email" select, and then press save at the bottom. 
+A Google API project and an OAuth 2.0 Client ID must be created to be able to run this project. To create a project, go to the [Google Developer API site](http://console.developers.google.com), click on "Select a project", and press the "NEW PROJECT" button. Once you've created and selected your new project, go to the "Credentials" tab on the same [Google Developer API site](http://console.developers.google.com) site. Go to the "OAuth consent screen" tab. Fill out the "Application Name" section, make sure there is a "Support email" selected, and then press save at the bottom. 
 
 To create an OAuth 2.0 client ID, go back to the "Credentials" tab, press "Create credentials", then select "OAuth client ID". For "Application type", select "Web application". Next, under "Authorized JavaScript origins" add `http://localhost:8000'` and under "Authorized redirect URIs" add `http://localhost:8000/googleoauth`. After you've created the OAuth client ID, download the JSON file and rename it to `client_secrets.json`. Include this file in the catalog directory of the git repository.
 
@@ -77,7 +77,7 @@ This web app utilizes the Flask web framework to create a front end which is res
 Points to Consider
 ------------------
 
-This web app is very much a development app. Factors that should be changed if moving to a production site include the creatomg a secure Flask key, removing debug mode, and including more forms of third party authentication.
+This web app is very much a development app. Factors that should be changed if moving to a production site include the creating a secure Flask key, removing debug mode, and including more forms of third party authentication.
 
 
 Acknowledgements
