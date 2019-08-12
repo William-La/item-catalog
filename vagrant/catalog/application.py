@@ -42,9 +42,11 @@ def callback_oauth():
     try:
         # if user is trying to log in
         if 'idtoken' in request.form:
+
             # if user is already logged in
             if 'token' in login_session:
                 return login_session.get('token', None)
+
             # else user is not logged in
             else:
                 token = request.form['idtoken']
@@ -63,6 +65,7 @@ def callback_oauth():
                 email = idinfo['email']
                 # check if user is in the db
                 userdb = session.query(User).filter_by(id=userid).first()
+
                 # if user is not in the db, create new user
                 if not userdb:
                     # create a new db user
@@ -70,6 +73,7 @@ def callback_oauth():
                     session.add(userdb)
                     session.commit()
                     flash('New user created!')
+
                 # else if user is already in the db
                 else:
                     flash('User logged in!')
@@ -108,6 +112,7 @@ def landingPage():
         # verify the user
         user = User.verify_auth_token(login_session['token'])
     recentItems = session.query(Item).order_by(Item.id.desc())[0:8]
+
     # pass the user parameter to determine if 'add new item' and 'signout'
     # button is shown
     return render_template('landing.html', recentItems=recentItems, user=user,
@@ -126,6 +131,7 @@ def showCategory(category):
         user = User.verify_auth_token(login_session['token'])
     cat_id = session.query(Category).filter_by(name=category).first().id
     items = session.query(Item).filter_by(cat_id=cat_id).all()
+
     # pass the user parameter to determine if 'signout' button is shown
     return render_template("category.html", items=items, category=category,
                            user=user, CLIENT_ID=CLIENT_ID)
@@ -143,15 +149,19 @@ def showItem(category, itemTitle):
     cat_id = session.query(Category).filter_by(name=category).first().id
     item = session.query(Item).filter_by(
            cat_id=cat_id, title=itemTitle).first()
+
     # if there is a user, check if they're the item's creator (Authorization)
     if user:
+
         # if item's credentials do not match up with user's, prevent editing
         if item.creator_id != login_session['userid']:
             user = None
             flash("Not authorized to edit or delete this item.")
+
         elif item.creator_email != login_session['email']:
             user = None
             flash("Not authorized to edit or delete this item.")
+
     # pass the user parameter to determine if 'edit', 'delete', and 'signout'
     # button is shown
     return render_template("item.html", item=item, user=user,
@@ -167,17 +177,22 @@ def newItem():
     if 'token' not in login_session:
         flash('Unauthorized. Please log in.')
         return redirect(url_for('landingPage'))
+
     # if the user has created a new item
     elif request.method == 'POST':
         title = ""
         desc = ""
+
         if request.form['title']:
             title = request.form['title']
+
         if request.form['desc']:
             desc = request.form['desc']
+
         if request.form['category']:
             name = request.form['category']
             category = session.query(Category).filter_by(name=name).first()
+
         email = login_session['email']
         userid = login_session['userid']
         newItem = Item(category=category, title=title, desc=desc,
@@ -186,6 +201,7 @@ def newItem():
         session.commit()
         flash('Item Successfully Added')
         return redirect(url_for('landingPage'))
+
     # else the user is trying to create a new item
     else:
         return render_template("new.html", CLIENT_ID=CLIENT_ID)
@@ -201,14 +217,17 @@ def editItem(itemTitle):
     if 'token' not in login_session:
         flash('Unauthorized. Please log in.')
         return redirect(url_for('landingPage'))
+
     # Authorization check
     elif item.creator_id != login_session['userid']:
         flash('Not authorized to edit that item.')
         return redirect(url_for('landingPage'))
+
     # Authorization check
     elif item.creator_email != login_session['email']:
         flash('Not authorized to edit that item.')
         return redirect(url_for('landingPage'))
+
     # if the user has edited the item
     elif request.method == 'POST':
         if request.form['title']:
@@ -223,6 +242,7 @@ def editItem(itemTitle):
         session.commit()
         flash('Item Successfully Edited')
         return redirect(url_for('showCategory', category=item.category.name))
+
     # else the user is going to edit
     else:
         return render_template("edit.html", item=item, CLIENT_ID=CLIENT_ID)
@@ -239,20 +259,24 @@ def deleteItem(itemTitle):
     if 'token' not in login_session:
         flash('Unauthorized. Please log in.')
         return redirect(url_for('landingPage'))
+
     # Authorization check
     elif item.creator_id != login_session['userid']:
         flash('Not authorized to delete that item.')
         return redirect(url_for('landingPage'))
+
     # Authorization check
     elif item.creator_email != login_session['email']:
         flash('Not authorized to delete that item.')
         return redirect(url_for('landingPage'))
+
     # if the user has deleted the item
     elif request.method == 'POST':
         session.delete(item)
         session.commit()
         flash('Item Successfully Deleted')
         return redirect(url_for('landingPage'))
+
     # else the user is going to delete
     else:
         return render_template("delete.html", item=item, CLIENT_ID=CLIENT_ID)
@@ -265,8 +289,10 @@ def catalogJSON():
     categories = session.query(Category).all()
     if categories:
         return jsonify(Catalog=[c.serialize for c in categories])
+
     else:
         return jsonify({"Message": "Error, please fill database"})
+
 
 # JSON endpoint for single category
 @app.route("/catalog/<category>/json")
@@ -274,8 +300,10 @@ def categoryJSON(category):
     cat = session.query(Category).filter_by(name=category).first()
     if cat:
         return jsonify(Category=cat.serialize)
+
     else:
         return jsonify({'Message': "Category not found"})
+
 
 # JSON endpoint for single item
 @app.route("/catalog/<category>/<itemTitle>/json")
@@ -286,8 +314,10 @@ def itemJSON(category, itemTitle):
                title=itemTitle, cat_id=cat.id).first()
         if item:
             return jsonify(Item=item.serialize)
+
         else:
             return jsonify({"Message": "Item not found"})
+
     else:
         return jsonify({"Message": "Category not found"})
 
