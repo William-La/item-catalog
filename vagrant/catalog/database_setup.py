@@ -40,6 +40,8 @@ class Item(Base):
     category = relationship(Category, back_populates="items")
     title = Column(String)
     desc = Column(String)
+    creator_id = Column(String, ForeignKey('user.id'))
+    creator_email = Column(String, ForeignKey('user.email'))
 
     # jsonify function
     @property
@@ -48,7 +50,8 @@ class Item(Base):
             'id': self.id,
             'cat_id': self.cat_id,
             'title': self.title,
-            'desc': self.desc
+            'desc': self.desc,
+            'creator': self.creator_email
         }
 
 

@@ -60,12 +60,11 @@ def callback_oauth():
 
                 # ID token is valid, can get info from decoded token
                 userid = idinfo['sub']
-
+                email = idinfo['email']
                 # check if user is in the db
                 userdb = session.query(User).filter_by(id=userid).first()
                 # if user is not in the db, create new user
                 if not userdb:
-                    email = idinfo['email']
                     # create a new db user
                     userdb = User(id=userid, email=email)
                     session.add(userdb)
@@ -78,6 +77,7 @@ def callback_oauth():
                 login_session['token'] = userdb.gen_auth_token()
                 login_session['user'] = token
                 login_session['userid'] = userid
+                login_session['email'] = email
 
                 return login_session.get('token', None)
 
@@ -143,6 +143,13 @@ def showItem(category, itemTitle):
     cat_id = session.query(Category).filter_by(name=category).first().id
     item = session.query(Item).filter_by(
            cat_id=cat_id, title=itemTitle).first()
+    # if there is a user, check if they're the item's creator (Authorization)
+    if user:
+        # if item's credentials do not match up with user's, prevent editing
+        if item.creator_id != login_session['userid'] or item.creator_email != login_session['email']:
+            user = None
+            flash("Not authorized to edit or delete this item.")
+
     # pass the user parameter to determine if 'edit', 'delete', and 'signout'
     # button is shown
     return render_template("item.html", item=item, user=user,
@@ -169,7 +176,10 @@ def newItem():
         if request.form['category']:
             name = request.form['category']
             category = session.query(Category).filter_by(name=name).first()
-        newItem = Item(category=category, title=title, desc=desc)
+        email = login_session['email']
+        userid = login_session['userid']
+        newItem = Item(category=category, title=title, desc=desc,
+                       creator_id=userid, creator_email=email)
         session.add(newItem)
         session.commit()
         flash('Item Successfully Added')
@@ -187,8 +197,12 @@ def editItem(itemTitle):
     item = session.query(Item).filter_by(title=itemTitle).first()
     # redirect if user is not logged in
     if 'token' not in login_session:
-        # flash('Unauthorized. Please log in.')
+        flash('Unauthorized. Please log in.')
         return redirect(url_for('landingPage'))
+    # Authorization check
+    elif item.creator_id != login_session['userid'] or item.creator_email != login_session['email']:
+         flash('Not authorized to edit that item.')
+         return redirect(url_for('landingPage'))
     # if the user has edited the item
     elif request.method == 'POST':
         if request.form['title']:
@@ -217,8 +231,12 @@ def deleteItem(itemTitle):
     category = item.category.name
     # redirect if user is not logged in
     if 'token' not in login_session:
-        # flash('Unauthorized. Please log in.')
+        flash('Unauthorized. Please log in.')
         return redirect(url_for('landingPage'))
+    # Authorization check
+    elif item.creator_id != login_session['userid'] or item.creator_email != login_session['email']:
+         flash('Not authorized to delete that item.')
+         return redirect(url_for('landingPage'))
     # if the user has deleted the item
     elif request.method == 'POST':
         session.delete(item)
