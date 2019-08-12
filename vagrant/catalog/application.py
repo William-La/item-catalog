@@ -146,10 +146,12 @@ def showItem(category, itemTitle):
     # if there is a user, check if they're the item's creator (Authorization)
     if user:
         # if item's credentials do not match up with user's, prevent editing
-        if item.creator_id != login_session['userid'] or item.creator_email != login_session['email']:
+        if item.creator_id != login_session['userid']:
             user = None
             flash("Not authorized to edit or delete this item.")
-
+        elif item.creator_email != login_session['email']:
+            user = None
+            flash("Not authorized to edit or delete this item.")
     # pass the user parameter to determine if 'edit', 'delete', and 'signout'
     # button is shown
     return render_template("item.html", item=item, user=user,
@@ -200,9 +202,13 @@ def editItem(itemTitle):
         flash('Unauthorized. Please log in.')
         return redirect(url_for('landingPage'))
     # Authorization check
-    elif item.creator_id != login_session['userid'] or item.creator_email != login_session['email']:
-         flash('Not authorized to edit that item.')
-         return redirect(url_for('landingPage'))
+    elif item.creator_id != login_session['userid']:
+        flash('Not authorized to edit that item.')
+        return redirect(url_for('landingPage'))
+    # Authorization check
+    elif item.creator_email != login_session['email']:
+        flash('Not authorized to edit that item.')
+        return redirect(url_for('landingPage'))
     # if the user has edited the item
     elif request.method == 'POST':
         if request.form['title']:
@@ -234,9 +240,13 @@ def deleteItem(itemTitle):
         flash('Unauthorized. Please log in.')
         return redirect(url_for('landingPage'))
     # Authorization check
-    elif item.creator_id != login_session['userid'] or item.creator_email != login_session['email']:
-         flash('Not authorized to delete that item.')
-         return redirect(url_for('landingPage'))
+    elif item.creator_id != login_session['userid']:
+        flash('Not authorized to delete that item.')
+        return redirect(url_for('landingPage'))
+    # Authorization check
+    elif item.creator_email != login_session['email']:
+        flash('Not authorized to delete that item.')
+        return redirect(url_for('landingPage'))
     # if the user has deleted the item
     elif request.method == 'POST':
         session.delete(item)
