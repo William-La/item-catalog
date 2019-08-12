@@ -35,6 +35,8 @@ except ValueError:
 # anti-forgery state token w/ Google sign-in
 @app.route("/googleoauth", methods=['POST'])
 def callback_oauth():
+    """connect Google sign-in to backend auth"""
+
     # Google sign-in API guidelines:
     # https://developers.google.com/identity/sign-in/web/sign-in
     try:
@@ -98,6 +100,8 @@ def callback_oauth():
 # route for landing page and recent items
 @app.route("/")
 def landingPage():
+    """landing page displays items recently added to the db"""
+
     user = None
     # if a user is logged in, then 'token' will be in login session
     if 'token' in login_session:
@@ -113,6 +117,8 @@ def landingPage():
 # route for showing the items in a category
 @app.route("/catalog/<category>")
 def showCategory(category):
+    """displays the items listed under a specific category"""
+
     # if a user is logged in, then 'token' will be in login session
     user = None
     if 'token' in login_session:
@@ -128,6 +134,8 @@ def showCategory(category):
 # route for showing an item and its description
 @app.route("/catalog/<category>/<itemTitle>")
 def showItem(category, itemTitle):
+    """shows the profile of a specific item"""
+
     user = None
     # if a user is logged in, then 'token' will be in login session
     if 'token' in login_session:
@@ -144,6 +152,8 @@ def showItem(category, itemTitle):
 # route for creating a new item (requires login)
 @app.route("/catalog/new", methods=['GET', 'POST'])
 def newItem():
+    """allows authenticated users to add new items to the catalog"""
+
     # redirect if user is not logged in
     if 'token' not in login_session:
         flash('Unauthorized. Please log in.')
@@ -172,6 +182,8 @@ def newItem():
 # route for editing an item (requires login)
 @app.route("/catalog/<itemTitle>/edit", methods=['GET', 'POST'])
 def editItem(itemTitle):
+    """allows authenticated users to edit items in the catalog"""
+
     item = session.query(Item).filter_by(title=itemTitle).first()
     # redirect if user is not logged in
     if 'token' not in login_session:
@@ -199,6 +211,8 @@ def editItem(itemTitle):
 # route for deleting an item (requires login)
 @app.route("/catalog/<itemTitle>/delete", methods=['GET', 'POST'])
 def deleteItem(itemTitle):
+    """allows authenticated users to delete items"""
+
     item = session.query(Item).filter_by(title=itemTitle).first()
     category = item.category.name
     # redirect if user is not logged in
