@@ -15,20 +15,29 @@ Set Up
 Clone, download, or fork this repository and create a copy of the repository on your local computer. To clone the repository, run the following line in your terminal (replace the placeholder directory name).
 
 ```terminal
-git clone https://github.com/William-La/item-catalog.git <DIRECTORY-NAME-HERE>
+$ git clone https://github.com/William-La/item-catalog.git <DIRECTORY-NAME-HERE>
 ```
 
 After creating a local copy of the repository, `cd` into the directory and then `cd` into the "vagrant" folder. Once in the vagrant directory, run the following to set up and start the virtual machine. This may take a while the first time it is ran.
 
 ```terminal
-vagrant up
+$ vagrant up
 ```
 
 Once the virtual machine is started, log into it with the following command.
 
 ```terminal
-vagrant ssh
+$ vagrant ssh
 ```
+
+
+### Download Requirements
+After you've logged into the virtual machine, there are a few requirements that must be installed. These requirements are listed in the `requirements.txt` file, and can be installed by running the following code snipet while in your linux virtual machine.
+
+```terminal
+$ sudo pip install --upgrade -r requirements.txt
+```
+
 
 ### Google OAuth2 Credentials
 A Google API project and an OAuth 2.0 Client ID must be created to be able to run this project. To create a project, go to the [Google Developer API site](http://console.developers.google.com), click on "Select a project", and press the "NEW PROJECT" button. Once you've created and selected your new project, go to the "Credentials" tab on the same [Google Developer API site](http://console.developers.google.com) site. Go to the "OAuth consent screen" tab. Fill out the "Application Name" section, make sure there is a "Support email" selected, and then press save at the bottom. 
@@ -39,14 +48,14 @@ To create an OAuth 2.0 client ID, go back to the "Credentials" tab, press "Creat
 Once you're in the virtual machine (after running the `vagrant ssh` command above), `cd` into the catalog directory by running the following.
 
 ```terminal
-cd /vagrant/catalog
+$ cd /vagrant/catalog
 ```
 
 Next, initalize and fill up the database for the web app with the folowing command.
 
 ```terminal
-python database_setup.py
-python fill_database.py
+$ python database_setup.py
+$ python fill_database.py
 ```
 
 
@@ -56,7 +65,7 @@ Usage
 To start the web app, run the following line while in the catalog directory of the virtual machine.
 
 ```terminal
-python application.py
+$ python application.py
 ```
 
 Once it is up and running, go to `http://localhost:8000` in your web browser. You should be on the landing page of the web application. You can then browse through the site to see the various entries present in the database.
