@@ -6,11 +6,11 @@
     <form action="#", method="POST">
         Title:
         <br>
-        <input type="text" name="title" value="{{item.title}}">
+        <input type="text" name="title" value="{{item.title}}" required minlength="1">
         <br>
         Description:
         <br>
-        <textarea name="desc" rows="10" cols="30">{{ item.desc }}</textarea>
+        <textarea name="desc" rows="10" cols="30" required minlength="1">{{ item.desc }}</textarea>
         <br>
 
         <!--Change following selection if rebranding-->
@@ -28,7 +28,7 @@
         </select>
         <br>
         <br>
-        <input type="submit" value="Submit">
+        <button type="submit">Submit</button>
     </form>
 </div>
 {% endblock %}
