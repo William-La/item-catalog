@@ -112,7 +112,6 @@ def landingPage():
 
 # route for showing the items in a category
 @app.route("/catalog/<category>")
-@app.route("/catalog/<category>/items")
 def showCategory(category):
     # if a user is logged in, then 'token' will be in login session
     user = None
@@ -217,11 +216,38 @@ def deleteItem(itemTitle):
         return render_template("delete.html", item=item, CLIENT_ID=CLIENT_ID)
 
 
-# JSON endpoint function
-@app.route("/catalog.json")
+# JSON endpoint for entire catalog
+@app.route("/json")
+@app.route("/catalog/json")
 def catalogJSON():
     categories = session.query(Category).all()
-    return jsonify(Category=[c.serialize for c in categories])
+    if categories:
+        return jsonify(Catalog=[c.serialize for c in categories])
+    else:
+        return jsonify({"Message": "Error, please fill database"})
+
+# JSON endpoint for single category
+@app.route("/catalog/<category>/json")
+def categoryJSON(category):
+    cat = session.query(Category).filter_by(name=category).first()
+    if cat:
+        return jsonify(Category=cat.serialize)
+    else:
+        return jsonify({'Message': "Category not found"})
+
+# JSON endpoint for single item
+@app.route("/catalog/<category>/<itemTitle>/json")
+def itemJSON(category, itemTitle):
+    cat = session.query(Category).filter_by(name=category).first()
+    if cat:
+        item = session.query(Item).filter_by(
+               title=itemTitle, cat_id=cat.id).first()
+        if item:
+            return jsonify(Item=item.serialize)
+        else:
+            return jsonify({"Message": "Item not found"})
+    else:
+        return jsonify({"Message": "Category not found"})
 
 
 if __name__ == '__main__':
