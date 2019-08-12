@@ -72,13 +72,13 @@ Once it is up and running, go to `http://localhost:8000` in your web browser. Yo
 
 To be able to create, edit, or delete items, you must log in through the Google Sign-in button. Once logged in, you will be able to see buttons which allow you to add, edit, and delete items as well as a sign out button. 
 
-### JSON API Endpoint
+### JSON API Endpoints
 
 While the project is running, the user can access three different JSON endpoints. Going to `http://localhost:8000/json` allows access to the catalog's entire JSON file.
 
 To access the JSON endpoint for a specific category, the user simply needs to navigate to the category's page on the web app and add `/json` to the end of the URL. For example, to access the JSON endpoint for the "Action" category, the user can first navigate to the "Action" category by clicking on "Action" in the sidebar menu or going to `http://localhost:8000/catalog/Action`. Then, they can add `/json` to the end of the URL, making it `http://localhost:8000/catalog/Action/json`. 
 
-Accessing the JSON endpoint for a specific item is fairly similar to the category endpoints. The user can navigate to the item's page on the web app and add `/json` to the end of the URL. For example, to access the JSON endpoint for the item "Abu", the user can first navigate to the "Fantasy" category and then click on the "Abu" item, taking them to `http://localhost:8000/catalog/Fantasy/Abu`. After adding `/json` to make it `http://localhost:8000/catalog/Fantasy/Abu/json`, they will see the JSON configuration. 
+Accessing the JSON endpoint for a specific item is fairly similar to the category endpoints. The user can navigate to the item's page on the web app and add `/json` to the end of the URL. For example, to access the JSON endpoint for the item "Abu", the user can first navigate to the "Fantasy" category and then click on the "Abu" item, taking them to `http://localhost:8000/catalog/Fantasy/Abu`. After adding `/json` to make the URL `http://localhost:8000/catalog/Fantasy/Abu/json`, they will see the JSON configuration. 
 
 If the category name or item title has spaces in it, such as "Science Fiction", the spaces will appear as `%20` in the URL, like `http://localhost:8000/catalog/Science%20Fiction`. The JSON endpoint will still appear if `/json` is added to the end of these URLs. 
 
