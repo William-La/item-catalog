@@ -158,10 +158,6 @@ def showItem(category, itemTitle):
             user = None
             flash("Not authorized to edit or delete this item.")
 
-        elif item.creator_email != login_session['email']:
-            user = None
-            flash("Not authorized to edit or delete this item.")
-
     # pass the user parameter to determine if 'edit', 'delete', and 'signout'
     # button is shown
     return render_template("item.html", item=item, user=user,
@@ -223,11 +219,6 @@ def editItem(itemTitle):
         flash('Not authorized to edit that item.')
         return redirect(url_for('landingPage'))
 
-    # Authorization check
-    elif item.creator_email != login_session['email']:
-        flash('Not authorized to edit that item.')
-        return redirect(url_for('landingPage'))
-
     # if the user has edited the item
     elif request.method == 'POST':
         if request.form['title']:
@@ -262,11 +253,6 @@ def deleteItem(itemTitle):
 
     # Authorization check
     elif item.creator_id != login_session['userid']:
-        flash('Not authorized to delete that item.')
-        return redirect(url_for('landingPage'))
-
-    # Authorization check
-    elif item.creator_email != login_session['email']:
         flash('Not authorized to delete that item.')
         return redirect(url_for('landingPage'))
 
