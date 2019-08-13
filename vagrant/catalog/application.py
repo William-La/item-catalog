@@ -200,7 +200,9 @@ def newItem():
 
     # else the user is trying to create a new item
     else:
-        return render_template("new.html", CLIENT_ID=CLIENT_ID)
+        categories = session.query(Category).all()
+        return render_template("new.html", categories=categories,
+                               CLIENT_ID=CLIENT_ID)
 
 
 # route for editing an item (requires login)
@@ -236,7 +238,9 @@ def editItem(itemTitle):
 
     # else the user is going to edit
     else:
-        return render_template("edit.html", item=item, CLIENT_ID=CLIENT_ID)
+        categories = session.query(Category).all()
+        return render_template("edit.html", item=item, categories=categories,
+                               CLIENT_ID=CLIENT_ID)
 
 
 # route for deleting an item (requires login)
