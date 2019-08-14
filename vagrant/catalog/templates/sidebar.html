@@ -1,6 +1,9 @@
 <div class="navigation">
+
     <h1 id="diffHeader">Genres</h1>
+
     {% for c in categories %}
     <a href="{{url_for('showCategory', category=c.name)}}">{{ c.name }}</a>
     {% endfor %}
+    
 </div>

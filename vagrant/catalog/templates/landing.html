@@ -2,26 +2,32 @@
 {% include "header.html" %}
 {% block content %}
 {% include "sidebar.html" %}
+
     <div class="main">
+
         {% if user %}
         <a id="itemButton" href="{{url_for('newItem')}}">add new item</a>
         {% endif %}
+
         <h1 id="diffHeader">Recently Added Movies</h1>
+
         {% if recentItems != [] %}
         <div class="items">
+
             {% for i in recentItems %}
             <a href="{{url_for('showItem', category = i.category.name, itemTitle = i.title)}}">{{i.title}}</a>
             ({{i.category.name}})
             <br>
             {% endfor %}
+            
         </div>
         
-        
-
         {% else %}
         <div>
             <p>There are no recent items.</p>
         </div>
         {% endif %}
+
     </div>
+    
 {% endblock %}

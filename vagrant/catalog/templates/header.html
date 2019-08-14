@@ -3,23 +3,24 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script src="{{url_for('static', filename='scripts.js')}}"></script>
-    <!--Be sure to include your Google project client id-->
+    <!--Be sure to include your Google project client ID throught the client_secrets.json file-->
     <meta name="google-signin-client_id" content="{{ CLIENT_ID }}">
 </head>
 
-
-
-
 <div class="header">
+
     <a id="title" href="{{url_for('landingPage')}}">Movie Catalog</a>
     <div class="right-header">
         <div class="g-signin2" data-onsuccess="onSignIn"></div>
     </div>
     <div id="signout" class="right-header">
+
         {% if user %}
         <a  href="/" onclick="signOut();">Sign out</a>
         {% endif %}
+
     </div>
+    
     <div id="flash" class="right-header">
         {% with messages = get_flashed_messages() %}
             {% if messages %}
@@ -29,4 +30,5 @@
             {% endif %}
         {% endwith %}
     </div>
+
 </div>

@@ -1,6 +1,7 @@
 {% extends "main.html" %}
 {% include "header.html" %}
 {% block content %}
+
     <div>
         <h1>Delete Item</h1>
         Are you sure you want to delete {{ item.title }}?
@@ -9,4 +10,5 @@
             <input style="margin-top: 20px" type="submit" value="Delete">        
         </form>
     </div>
+    
 {% endblock %}

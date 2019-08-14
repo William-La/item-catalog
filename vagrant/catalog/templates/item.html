@@ -1,12 +1,16 @@
 {% extends "main.html" %}
 {% include "header.html" %}
 {% block content %}
+
     <div>
         <h1>{{ item.title }}</h1>
     </div>
+    
     <p>Description: {{ item.desc }}</p>
+
     {% if user %}
     <a id="itemButton" href="{{url_for('editItem', itemTitle=item.title)}}">edit</a> | 
     <a id="itemButton" href="{{url_for('deleteItem', itemTitle=item.title)}}">delete</a>
     {% endif %}
+
 {% endblock %}
