@@ -113,10 +113,13 @@ def landingPage():
         user = User.verify_auth_token(login_session['token'])
     recentItems = session.query(Item).order_by(Item.id.desc())[0:8]
 
+    # get categories for sidebar
+    categories = session.query(Category).all()
+
     # pass the user parameter to determine if 'add new item' and 'signout'
     # button is shown
     return render_template('landing.html', recentItems=recentItems, user=user,
-                           CLIENT_ID=CLIENT_ID)
+                           categories=categories, CLIENT_ID=CLIENT_ID)
 
 
 # route for showing the items in a category
@@ -132,9 +135,13 @@ def showCategory(category):
     cat_id = session.query(Category).filter_by(name=category).first().id
     items = session.query(Item).filter_by(cat_id=cat_id).all()
 
+    # get categories for sidebar
+    categories = session.query(Category).all()
+
     # pass the user parameter to determine if 'signout' button is shown
     return render_template("category.html", items=items, category=category,
-                           user=user, CLIENT_ID=CLIENT_ID)
+                           categories=categories, user=user,
+                           CLIENT_ID=CLIENT_ID)
 
 
 # route for showing an item and its description
