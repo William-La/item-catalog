@@ -8,6 +8,11 @@ from flask_httpauth import HTTPTokenAuth
 from google.oauth2 import id_token
 from google.auth.transport import requests
 import json
+import logging
+
+
+# configure logging
+logging.basicConfig()
 
 auth = HTTPTokenAuth(scheme="Token")
 
@@ -28,8 +33,8 @@ try:
     JSON_DATA = json.loads(open('client_secrets.json', 'r').read())['web']
     CLIENT_ID = JSON_DATA['client_id']
     CLIENT_SECRET = JSON_DATA['client_secret']
-except ValueError:
-    print('*** ERROR: Could not find \'client_secrets.json\' file ***')
+except IOError:
+    logging.warning('Could not find \'client_secrets.json\' file')
 
 
 # anti-forgery state token w/ Google sign-in
