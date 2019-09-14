@@ -2,7 +2,6 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy import create_engine
-from passlib.apps import custom_app_context as pwd_context
 import random
 import string
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer,
