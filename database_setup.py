@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, ForeignKeyConstraint
 import random
 import string
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer,
