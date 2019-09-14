@@ -14,23 +14,6 @@ sKey = "".join(random.choice(string.ascii_uppercase +
                              string.digits) for x in xrange(32))
 
 
-# category table
-class Category(Base):
-    __tablename__ = 'category'
-    id = Column(Integer, primary_key=True, unique=True)
-    name = Column(String)
-    items = relationship("Item")
-
-    # jsonify function
-    @property
-    def serialize(self):
-        return{
-            'id': self.id,
-            'name': self.name,
-            'item': [i.serialize for i in self.items],
-        }
-
-
 # user table
 class User(Base):
     __tablename__ = 'user'
@@ -67,6 +50,23 @@ class User(Base):
         }
 
 
+# category table
+class Category(Base):
+    __tablename__ = 'category'
+    id = Column(Integer, primary_key=True, unique=True)
+    name = Column(String)
+    items = relationship("Item")
+
+    # jsonify function
+    @property
+    def serialize(self):
+        return{
+            'id': self.id,
+            'name': self.name,
+            'item': [i.serialize for i in self.items],
+        }
+
+
 # item table
 class Item(Base):
     __tablename__ = 'item'
@@ -75,6 +75,7 @@ class Item(Base):
     category = relationship(Category, back_populates="items")
     title = Column(String)
     desc = Column(String)
+    user = relationship(User)
     creator_id = Column(String, ForeignKey('user.id'))
     creator_email = Column(String, ForeignKey('user.email'))
 
