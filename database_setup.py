@@ -31,29 +31,6 @@ class Category(Base):
         }
 
 
-# item table
-class Item(Base):
-    __tablename__ = 'item'
-    id = Column(Integer, primary_key=True)
-    cat_id = Column(Integer, ForeignKey('category.id'))
-    category = relationship(Category, back_populates="items")
-    title = Column(String)
-    desc = Column(String)
-    creator_id = Column(String, ForeignKey('user.id'))
-    creator_email = Column(String, ForeignKey('user.email'))
-
-    # jsonify function
-    @property
-    def serialize(self):
-        return{
-            'id': self.id,
-            'cat_id': self.cat_id,
-            'title': self.title,
-            'desc': self.desc,
-            'creator': self.creator_email
-        }
-
-
 # user table
 class User(Base):
     __tablename__ = 'user'
@@ -87,6 +64,29 @@ class User(Base):
             'id': self.id,
             'email': self.email,
             'pic': self.pic
+        }
+
+
+# item table
+class Item(Base):
+    __tablename__ = 'item'
+    id = Column(Integer, primary_key=True)
+    cat_id = Column(Integer, ForeignKey('category.id'))
+    category = relationship(Category, back_populates="items")
+    title = Column(String)
+    desc = Column(String)
+    creator_id = Column(String, ForeignKey('user.id'))
+    creator_email = Column(String, ForeignKey('user.email'))
+
+    # jsonify function
+    @property
+    def serialize(self):
+        return{
+            'id': self.id,
+            'cat_id': self.cat_id,
+            'title': self.title,
+            'desc': self.desc,
+            'creator': self.creator_email
         }
 
 
