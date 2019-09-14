@@ -75,9 +75,10 @@ class Item(Base):
     category = relationship(Category, back_populates="items")
     title = Column(String)
     desc = Column(String)
-    creator_id = Column(String, ForeignKey('user.id'))
-    creator_email = Column(String, ForeignKey('user.email'))
+    creator_id = Column(String)
+    creator_email = Column(String)
     user = relationship(User)
+    __table_args__ = (ForeignKeyConstraint([creator_id, creator_email],[user.id, user.email]), {})
 
     # jsonify function
     @property
