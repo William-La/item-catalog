@@ -17,8 +17,7 @@ logging.basicConfig()
 auth = HTTPTokenAuth(scheme="Token")
 
 
-engine = create_engine('postgresql://catalog:123password@localhost/itemcatalog',
-                       connect_args={'check_same_thread': False})
+engine = create_engine('postgresql://catalog:123password@localhost/itemcatalog')
 
 # create database session
 Base.metadata.bind = engine
