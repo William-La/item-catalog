@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
-from sqlalchemy import create_engine, ForeignKeyConstraint
+from sqlalchemy import create_engine
 import random
 import string
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer,
@@ -75,10 +75,8 @@ class Item(Base):
     category = relationship(Category, back_populates="items")
     title = Column(String)
     desc = Column(String)
-    creator_id = Column(String)
-    creator_email = Column(String)
+    creator_id = Column(String, ForeignKey('user.id'))
     user = relationship(User)
-    __table_args__ = (ForeignKeyConstraint([creator_id, creator_email],[user.id, user.email]), {})
 
     # jsonify function
     @property

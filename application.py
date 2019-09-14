@@ -201,10 +201,9 @@ def newItem():
             name = request.form['category']
             category = session.query(Category).filter_by(name=name).first()
 
-        email = login_session['email']
         userid = login_session['userid']
         newItem = Item(category=category, title=title, desc=desc,
-                       creator_id=userid, creator_email=email)
+                       creator_id=userid)
         session.add(newItem)
         session.commit()
         flash('Item Successfully Added')
