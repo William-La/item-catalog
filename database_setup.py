@@ -13,7 +13,7 @@ Base = declarative_base()
 sKey = "".join(random.choice(string.ascii_uppercase +
                              string.digits) for x in xrange(32))
 
-
+                             
 # user table
 class User(Base):
     __tablename__ = 'user'
@@ -75,9 +75,9 @@ class Item(Base):
     category = relationship(Category, back_populates="items")
     title = Column(String)
     desc = Column(String)
-    user = relationship(User)
     creator_id = Column(String, ForeignKey('user.id'))
     creator_email = Column(String, ForeignKey('user.email'))
+    user = relationship(User)
 
     # jsonify function
     @property
