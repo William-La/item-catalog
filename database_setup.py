@@ -17,7 +17,7 @@ sKey = "".join(random.choice(string.ascii_uppercase +
 # category table
 class Category(Base):
     __tablename__ = 'category'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, unique=True)
     name = Column(String)
     items = relationship("Item")
 
@@ -35,7 +35,7 @@ class Category(Base):
 class User(Base):
     __tablename__ = 'user'
     # id will be google auth 'sub' var
-    id = Column(String, primary_key=True)
+    id = Column(String, primary_key=True, unique=True)
     email = Column(String, nullable=False, unique=True)
 
     def gen_auth_token(self, expiration=3600):
@@ -70,7 +70,7 @@ class User(Base):
 # item table
 class Item(Base):
     __tablename__ = 'item'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, unique=True)
     cat_id = Column(Integer, ForeignKey('category.id'))
     category = relationship(Category, back_populates="items")
     title = Column(String)
