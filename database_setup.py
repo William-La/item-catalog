@@ -90,6 +90,6 @@ class User(Base):
         }
 
 
-engine = create_engine('postgresql://catalog:123password@localhost/itemCatalog')
+engine = create_engine('postgresql://catalog:123password@localhost/itemcatalog')
 
 Base.metadata.create_all(engine)

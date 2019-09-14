@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Category, Item, Base
 
-engine = create_engine('postgresql://catalog:123password@localhost/itemCatalog',
+engine = create_engine('postgresql://catalog:123password@localhost/itemcatalog',
                        connect_args={'check_same_thread': False})
 
 Base.metadata.bind = engine
