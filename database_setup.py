@@ -36,7 +36,7 @@ class User(Base):
     __tablename__ = 'user'
     # id will be google auth 'sub' var
     id = Column(String, primary_key=True)
-    email = Column(String, nullable=False)
+    email = Column(String, nullable=False, unique=True)
 
     def gen_auth_token(self, expiration=3600):
         s = Serializer(sKey, expires_in=expiration)
