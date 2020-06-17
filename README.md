@@ -1,6 +1,6 @@
 # Item Catalog Project
 
-Item catalog is a web application that allows users to browse categories and items stored in a database. Authenticated users are able to post, edit, and delete items. Users are authenticated through a third-party authentication service. The theme used for the sample database is a movie catalog website, where users can submit movie reviews. This project is a requirement for Udacity's Full Stack Web Developer Nanodegree.
+Item catalog is a web application that allows users to browse categories and items stored in a database. Authenticated users are able to post, edit, and delete items. Users are authenticated through a third-party authentication service. The theme used for the sample database is a movie catalog website, where users can submit movie reviews. 
 
 
 Required Software
